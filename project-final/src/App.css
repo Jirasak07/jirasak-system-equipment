@@ -1,7 +1,6 @@
-.layout{
-  display: flex;
-  background-color: aqua;
-  flex-direction: row;
+.App {
+  background-color: #e1e5f2;
+  min-height: 100vh;
+  height: fit-content;
+  min-width: 375px;
 }
-
-

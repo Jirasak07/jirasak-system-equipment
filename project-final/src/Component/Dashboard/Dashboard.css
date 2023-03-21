@@ -1,0 +1,109 @@
+.card-data {
+  height: 170px;
+
+}
+.card-info {
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+}
+.card-text{
+  font-size: 26px;
+}
+.text-card{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.text-incard{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.resualt{
+  font-size: 5rem;
+  line-height: 0;
+  font-weight: 500 !important;
+}
+.icon-card{
+  font-size: 6rem;
+  display: flex;
+  align-items: center;
+}
+.text-inf {
+  font-size: 22px;
+  font-weight: 600;
+}
+.txt-dashboard {
+  font-size: 30px;
+  font-weight: 500;
+}
+.logoinf {
+  font-size: 4.5rem;
+}
+.numinf {
+  font-size: 4rem;
+}
+.box-all {
+  background-color: #bde0fe;
+  color: #1183bd;
+}
+.box-check {
+  background-color: #c1fba4;
+  color: #5cc527;
+}
+.box-wait {
+  background-color: #fff6cc;
+  color: #dabf42;
+}
+.mdb-dataTable-head {
+  color: #5a189a;
+}
+.head-font {
+  color: #5a189a;
+  font-size: 18px;
+  font-weight: 600;
+}
+.inf {
+  gap: 10px;
+}
+.piec {
+  height: 500px !important;
+  width: 500px !important;
+}
+
+.over {
+  overflow-x: auto;
+}
+.barChart {
+  width: 100%;
+  height: 100%;
+
+}
+.conchart {
+  flex-direction: row;
+  max-height: fit-content;
+}
+.pie,
+.bar {
+  border-radius: 20px;
+}
+@media screen and (max-width: 700px) {
+  .card-data {
+    height: 160px;
+  }
+  .chart {
+    width: 500px;
+  }
+}
+@media screen and (max-width: 1640px) {
+  .conchart {
+    flex-direction: column;
+  }
+  .pie,
+  .bar {
+    width: 100% !important;
+  }
+}
