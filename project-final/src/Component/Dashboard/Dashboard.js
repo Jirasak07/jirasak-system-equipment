@@ -64,13 +64,13 @@ function Dashboard() {
         </div>
       </div>
       <div className="pt-4 ">
-        <div className="d-flex flex-row bg-white" style={{ borderRadius: 15 }}>
-          <div className="col-8">
-            <div className=" p-4">
+        <div className="d-flex flex-xl-row flex-column bg-white" style={{ borderRadius: 15 }}>
+          <div className="col-12 col-xl-8" style={{overflow:"auto"}} >
+            <div className=" p-4" style={{minHeight:350,minWidth:800}} >
               <BarChart />
             </div>
           </div>
-          <div className=" col-4 ">
+          <div className=" col-12 col-xl-4 ">
             <div className="p-4">
               <PieChart />
             </div>

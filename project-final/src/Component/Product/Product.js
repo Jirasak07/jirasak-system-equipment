@@ -85,6 +85,7 @@ function Product() {
       <Pane className="dialog">
         <Dialog
           className="dialog "
+          shouldCloseOnOverlayClick={false}
           isShown={isShownAdd}
           onCloseComplete={() => setIsShownAdd(false)}
           hasFooter={false}
