@@ -12,13 +12,16 @@ import AddPD from "./AddPD";
 import DetailProduct from "./DetailProduct";
 function Product() {
   const swal = withReactContent(Swal);
-  const [data, setData] = useState({skdjhfksjf:"kdjfkdf"});
+  const [data, setData] = useState({ skdjhfksjf: "kdjfkdf" });
   const [isShown, setIsShown] = useState(false);
-  const [isShownEdit, setIsShownEdit] = useState(false);
+  const [isShownAdd, setIsShownAdd] = useState(false);
   const [pid, setPid] = useState();
   const Detail = (val) => {
-     setIsShown(!isShown);
+    setIsShown(!isShown);
     setPid(val);
+  };
+  const AddSingle = () => {
+    setIsShownAdd(!isShownAdd);
   };
   useEffect(() => {
     axios.get("http://localhost:4444/product").then((res) => {
@@ -54,7 +57,7 @@ function Product() {
             sagen: <>{item.sub_aname}</>,
             year: <>{item.fisicalyear}</>,
             status: <>{item.pstatus_name}</>,
-            clickEvent:()=>Detail(item.pid),
+            clickEvent: () => Detail(item.pid),
           })),
         ],
       });
@@ -64,7 +67,7 @@ function Product() {
     <div className="container-fluid p-lg-5 p-md-3 p-0 ">
       <div className="bg-white p-3 " style={{ borderRadius: 15 }}>
         <div className="d-flex justify-content-end">
-          <div className="btn-primary btn btn-sm">เพิ่มครุภัณฑ์เดี่ยว</div>
+          <div className="btn-primary btn btn-sm" onClick={AddSingle} >เพิ่มครุภัณฑ์เดี่ยว</div>
           <div className="btn-secondary btn btn-sm">เพิ่มครุภัณฑ์กลุ่ม</div>
         </div>
         <MDBDataTableV5 data={data} responsive sortable={false} />
@@ -76,7 +79,17 @@ function Product() {
           onCloseComplete={() => setIsShown(false)}
           hasFooter={false}
         >
-<DetailProduct id={pid} />
+          <DetailProduct id={pid} />
+        </Dialog>
+      </Pane>
+      <Pane className="dialog">
+        <Dialog
+          className="dialog "
+          isShown={isShownAdd}
+          onCloseComplete={() => setIsShownAdd(false)}
+          hasFooter={false}
+        >
+          <AddPD />
         </Dialog>
       </Pane>
     </div>

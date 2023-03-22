@@ -41,7 +41,7 @@ function QRCode(props) {
         </div>
       </div>
       <div className="grid  text-center">
-        <div onClick={Dow} className="btn btn-success">
+        <div onClick={Dow} className="btn btn-success btn-sm">
           ดาวน์โหลด
         </div>
       </div>

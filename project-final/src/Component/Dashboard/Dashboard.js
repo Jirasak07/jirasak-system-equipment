@@ -15,7 +15,7 @@ function Dashboard() {
     };
   }, []);
   return (
-    <div className="px-md-5 px-0  py-4 bg-danger ">
+    <div className="px-md-5 px-0  py-4 ">
       <div
         className=" bg-white d-flex flex-xl-row flex-column  py-3 px-3  text-inf justify-content-around "
         style={{ borderRadius: 15 }}
