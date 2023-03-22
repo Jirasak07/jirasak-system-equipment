@@ -51,6 +51,26 @@ function AddPD() {
     console.table(event)
     console.table(event.pid + typename)
     // Your code to handle the file upload goes here
+    axios.post("http://localhost:4444/add-product",{
+      pid:"",
+      pname:'',
+      pdetail:'',
+      qty:'',
+      unit:'',
+      price:'',
+      finance:'',
+      ac:'',
+      ptype_id:'',
+      seller:'',
+      sub_aid:'',
+      pstatus_id:'',
+      buydate:'',
+      pickdate:'',
+      fisicalyear:'',
+      image:''
+    }).then((res)=>{
+      
+    })
   };
   return (
     <>
