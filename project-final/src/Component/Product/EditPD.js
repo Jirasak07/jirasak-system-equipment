@@ -3,7 +3,10 @@ import { useForm } from "react-hook-form";
 import { SelectField, TextInputField, Button } from "evergreen-ui";
 import axios from "axios";
 import { format } from "date-fns";
-function AddPD({closeAdd}) {
+import { useParams } from "react-router-dom";
+import noIMG from '../../assets/no-photo-available.png'
+function EditPD() {
+  const { id } = useParams();
   const [valueType, setValueType] = useState([]);
   const [ptype, setPtype] = useState(1);
   const [valueAgen, setValueAgen] = useState([]);
@@ -12,23 +15,22 @@ function AddPD({closeAdd}) {
   const [pstatus, setPstatus] = useState(1);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(null);
+  const [pname, setPname] = useState("");
+  const [pdetail, setPdetail] = useState("");
+  const [unit, setUnit] = useState("");
+  const [price, setPrice] = useState();
+  const [finance, setFinance] = useState();
+  const [seller, setSeller] = useState();
+  const [ac, setAc] = useState();
+  const [fisicalyear, setFisicalyear] = useState();
+  const [buydate, setBuydate] = useState();
+  const [pickdate, setPickdate] = useState();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
-  useEffect(() => {
-    axios.get("http://localhost:4444/product-type").then((res) => {
-    
-      setValueType(res.data);
-    });
-    axios.get("http://localhost:4444/subagen").then((res) => {
-      setValueAgen(res.data);
-    });
-    axios.get("http://localhost:4444/pstatus").then((res) => {
-      setValuePstatus(res.data);
-    });
-  }, []);
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
   const [typename, setTypeName] = useState("");
@@ -48,53 +50,49 @@ function AddPD({closeAdd}) {
       setPreviewSource(reader.result);
     };
   };
-  const onSubmit = (event) => {
-    var day1 = String(event.buydate).split("/");
-    var buy1 = day1[1] + "/" + day1[0] + "/" + day1[2];
-    const buydatee = format(new Date(buy1), "yyyy-MM-dd");
-    var day2 = String(event.pickdate).split("/");
-    var pick = day2[1] + "/" + day2[0] + "/" + day2[2];
-    const pickk = format(new Date(pick), "yyyy-MM-dd");
-
+  const onSubmit = (e) => {
+    console.log(e.pname);
+  };
+  useEffect(() => {
     axios
-      .post("http://localhost:4444/add-product", {
-        pid: event.pid,
-        pname: event.pname,
-        pdetail: event.pdetail,
-        qty: 1,
-        unit: event.unit,
-        price: event.price,
-        finance: event.finance,
-        acquirement: event.ac,
-        ptype_id: ptype,
-        seller: event.seller,
-        sub_aid: subagen,
-        pstatus_id: pstatus,
-        buydate: buydatee,
-        pickdate: pickk,
-        fisicalyear: event.fisicalyear,
-        image: event.pid + typename,
+      .post("http://localhost:4444/detail-pd", {
+        pid: id,
       })
       .then((res) => {
-        if (res.data.status == "success") {
-          alert("1234")
-          const url = "http://localhost:4444/upload";
-          const formData = new FormData();
-          formData.append("photo", file, event.pid + typename);
-          
-          axios.post(url, formData).then((response) => {
-            if(response.data.status == "success"){
-
-            }
-          });
-        } else if (res.data.status === "error") {
-          alert(res.data.status);
+        console.table(res.data);
+        setPtype(res.data[0].ptype_id);
+        setPstatus(res.data[0].pstatus_id);
+        setSubAgen(res.data[0].sub_aid);
+        setPname(res.data[0].pname);
+        setPdetail(res.data[0].pdetail);
+        setUnit(res.data[0].unit);
+        setPrice(res.data[0].price);
+        setFinance(res.data[0].finance);
+        setSeller(res.data[0].seller);
+        setAc(res.data[0].ac);
+        setFisicalyear(res.data[0].fisicalyear);
+        setBuydate(format(new Date(res.data[0].buydate), "P"));
+        setPickdate(format(new Date(res.data[0].pickdate), "P"));
+        if (res.data[0].image) {
+          setPreviewSource("http://localhost:4444/img/" + res.data[0].image);
+        }else{
+          setPreviewSource(noIMG)
         }
       });
-  };
+    axios.get("http://localhost:4444/product-type").then((res) => {
+      console.log(res.data);
+      setValueType(res.data);
+    });
+    axios.get("http://localhost:4444/subagen").then((res) => {
+      setValueAgen(res.data);
+    });
+    axios.get("http://localhost:4444/pstatus").then((res) => {
+      setValuePstatus(res.data);
+    });
+  }, []);
   return (
     <>
-      <div className="container">
+      <div className="container p-4 bg-white rounded mt-3">
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
           <div className="d-flex flex-row">
             <div className="col-6">
@@ -102,9 +100,11 @@ function AddPD({closeAdd}) {
                 inputHeight={40}
                 label="หมายเลขครุภัณฑ์"
                 placeholder="KPRU..."
+                disabled
+                value={id}
                 {...register("pid", {
                   required: {
-                    value: true,
+                    value: false,
                     message: "กรุณากรอกหมายเลขครุภัณฑ์",
                   },
                   pattern: {
@@ -125,6 +125,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="รายการ"
+                defaultValue={pname}
                 placeholder="ชื่อครุภัณฑ์"
                 {...register("pname", {
                   required: {
@@ -156,6 +157,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="คุณลักษณะ"
+                defaultValue={pdetail}
                 placeholder="รายละเอียดครุภัณฑ์"
                 {...register("pdetail", {
                   required: {
@@ -185,6 +187,7 @@ function AddPD({closeAdd}) {
                 inputHeight={40}
                 label="หน่วย"
                 placeholder="เครื่อ.."
+                defaultValue={unit}
                 {...register("unit", {
                   required: {
                     value: true,
@@ -200,6 +203,7 @@ function AddPD({closeAdd}) {
                 inputHeight={40}
                 label="ราคา (บาท)"
                 placeholder="1500.."
+                defaultValue={price}
                 type="number"
                 {...register("price", {
                   required: {
@@ -222,6 +226,7 @@ function AddPD({closeAdd}) {
                 inputHeight={40}
                 label="ประเภทเงิน"
                 placeholder="งบประมา.."
+                defaultValue={finance}
                 {...register("finance", {
                   required: {
                     value: true,
@@ -239,6 +244,7 @@ function AddPD({closeAdd}) {
                 inputHeight={40}
                 label="ผู้ขาย"
                 placeholder="บริษัท.."
+                defaultValue={seller}
                 {...register("seller", {
                   required: {
                     value: true,
@@ -257,6 +263,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="ที่มาครุภัณฑ์"
+                defaultValue={ac}
                 placeholder="ตกลงราค.."
                 {...register("ac", {
                   required: {
@@ -272,6 +279,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="ปีงบประมาณ"
+                defaultValue={fisicalyear}
                 placeholder="2560.."
                 {...register("fisicalyear", {
                   required: {
@@ -299,6 +307,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="วันเดือนปีที่ซื้อ"
+                defaultValue={buydate}
                 placeholder="วว/ดด/ปปปป"
                 {...register("buydate", {
                   required: {
@@ -321,6 +330,7 @@ function AddPD({closeAdd}) {
               <TextInputField
                 inputHeight={40}
                 label="วันเดือนปีที่รับ"
+                defaultValue={pickdate}
                 placeholder="วว/ดด/ปปปป"
                 {...register("pickdate", {
                   required: {
@@ -344,6 +354,7 @@ function AddPD({closeAdd}) {
             <div className="col-6">
               <SelectField
                 label="หน่วยงานที่ติดตั้ง"
+                disabled
                 inputHeight={40}
                 value={subagen}
                 onChange={(event) => setSubAgen(event.target.value)}
@@ -358,6 +369,7 @@ function AddPD({closeAdd}) {
             <div className="col-6">
               <SelectField
                 label="สถานะครุภัณฑ์"
+                disabled
                 inputHeight={40}
                 value={pstatus}
                 onChange={(event) => setPstatus(event.target.value)}
@@ -389,12 +401,12 @@ function AddPD({closeAdd}) {
               )}
             </div>
           </div>
-          <div className="d-flex flex-row justify-content-end pb-3" style={{gap:5}}>
+          <div
+            className="d-flex flex-row justify-content-end pb-3"
+            style={{ gap: 5 }}
+          >
             <Button appearance="primary" intent="success" type="submit">
               บันทึก
-            </Button>
-            <Button appearance="primary" intent="danger" type="button" onClick={closeAdd}>
-              ปิด
             </Button>
           </div>
         </form>
@@ -403,4 +415,4 @@ function AddPD({closeAdd}) {
   );
 }
 
-export default AddPD;
+export default EditPD;

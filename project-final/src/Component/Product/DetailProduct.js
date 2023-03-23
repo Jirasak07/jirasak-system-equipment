@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import QRCode from "../QRCode/QRCode";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
+import {NavLink,useParams} from 'react-router-dom'
+import noIMG from '../../assets/no-photo-available.png'
 
 function DetailProduct({ id }) {
   const [data, setData] = useState();
@@ -21,6 +23,7 @@ function DetailProduct({ id }) {
   const [status, setStatus] = useState();
   const [textStatus, setTextStatus] = useState("");
   const [ptype, setPtype] = useState();
+  const [imga,setImg]=useState()
 
   useEffect(() => {
     axios
@@ -50,6 +53,11 @@ function DetailProduct({ id }) {
         } else if (datat.pstatus_id == 2) {
           setTextStatus("text-warning");
         }
+        if (res.data[0].image) {
+          setImg("http://localhost:4444/img/" + res.data[0].image);
+        }else{
+          setImg(noIMG)
+        }
       });
   }, [id]);
   return (
@@ -63,7 +71,7 @@ function DetailProduct({ id }) {
       >
         <div className="d-flex flex-row">
           <div className="col-4 d-flex justify-content-center ">
-            <img src="https://picsum.photos/150/150" width={150} height={150} />
+            <img src={imga} width={150} height={150} />
           </div>
           <div
             className="col-8 pb-2 pl-3 d-flex flex-column"
@@ -121,7 +129,7 @@ function DetailProduct({ id }) {
       <div className="bg-white p-4 shadow-md rounded">
         <QRCode id={id} />
       </div>
-      <div className="btn btn-sm btn-warning shadow-md rounded">แก้ไข</div>
+      <NavLink className="btn btn-sm btn-warning" to={`/edit/${id}`} >แก้ไข</NavLink>
     </div>
   );
 }

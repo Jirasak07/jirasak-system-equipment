@@ -6,6 +6,7 @@ import Dashboard from "./Component/Dashboard/Dashboard";
 import Layout from "./Component/Layout";
 import CheckPD from "./Component/ManageProduct/CheckPD";
 import ScanQR from "./Component/ManageProduct/ScanQR";
+import EditPD from "./Component/Product/EditPD";
 import Product from "./Component/Product/Product";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/product" element={<Product/>} />
           <Route path="/check" element={<CheckPD/>} />
           <Route path="/scan" element={<ScanQR/>} />
+          <Route path="/edit/:id" element={<EditPD/>} />
           <Route path="/manage-ac" element={<ManageAc/>} />
         </Route>
       </Routes>

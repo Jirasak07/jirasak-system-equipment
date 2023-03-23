@@ -23,6 +23,9 @@ function Product() {
   const AddSingle = () => {
     setIsShownAdd(!isShownAdd);
   };
+  const CloseAdd = ()=>{
+    setIsShownAdd(!isShownAdd);
+  }
   useEffect(() => {
     axios.get("http://localhost:4444/product").then((res) => {
       console.log(res.data);
@@ -70,7 +73,7 @@ function Product() {
           <div className="btn-primary btn btn-sm" onClick={AddSingle} >เพิ่มครุภัณฑ์เดี่ยว</div>
           <div className="btn-secondary btn btn-sm">เพิ่มครุภัณฑ์กลุ่ม</div>
         </div>
-        <MDBDataTableV5 data={data} responsive sortable={false} />
+        <MDBDataTableV5 data={data} responsive sortable={false} entriesLabel="จำนวนต่อหน้า" />
       </div>
       <Pane className="dialog">
         <Dialog
@@ -90,7 +93,7 @@ function Product() {
           onCloseComplete={() => setIsShownAdd(false)}
           hasFooter={false}
         >
-          <AddPD />
+          <AddPD closeAdd={CloseAdd} />
         </Dialog>
       </Pane>
     </div>

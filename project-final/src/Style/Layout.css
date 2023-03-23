@@ -21,7 +21,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
   overflow-x:hidden;
-width: max-content;
+  overflow-y: auto;
 }
 .zin{
   z-index: 10;
