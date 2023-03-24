@@ -9,7 +9,7 @@ const Layout = () => {
     <>
       <div className="container-layout d-flex flex-column flex-md-row layout ">
         <Headbar  />
-        <div className="content container-fluid p-lg-2 p-0 ">
+        <div className="content container-fluid  p-lg-2 p-2 ">
           <Outlet />
         </div>
       </div>

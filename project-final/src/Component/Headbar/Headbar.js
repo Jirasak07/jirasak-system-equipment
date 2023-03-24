@@ -75,7 +75,7 @@ function Headbar() {
             <NavLink to="/product" className="navlink" activeClassName="active">
               <FaListUl /> ครุภัณฑ์ทั้งหมด
             </NavLink>
-
+{/* 
             <div
               className="navlink" 
               onClick={() => {
@@ -103,7 +103,7 @@ function Headbar() {
               >
               <HiOutlineDocumentDownload/>  อัพเดทครุภัณฑ์
               </NavLink>
-            </div>
+            </div> */}
 
             <NavLink
               to="/scan"

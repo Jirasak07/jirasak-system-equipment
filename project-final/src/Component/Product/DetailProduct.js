@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import QRCode from "../QRCode/QRCode";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
-import {NavLink,useParams} from 'react-router-dom'
-import noIMG from '../../assets/no-photo-available.png'
+import { NavLink, useParams } from "react-router-dom";
+import noIMG from "../../assets/no-photo-available.png";
 
 function DetailProduct({ id }) {
   const [data, setData] = useState();
@@ -23,7 +23,7 @@ function DetailProduct({ id }) {
   const [status, setStatus] = useState();
   const [textStatus, setTextStatus] = useState("");
   const [ptype, setPtype] = useState();
-  const [imga,setImg]=useState()
+  const [imga, setImg] = useState();
 
   useEffect(() => {
     axios
@@ -55,8 +55,8 @@ function DetailProduct({ id }) {
         }
         if (res.data[0].image) {
           setImg("http://localhost:4444/img/" + res.data[0].image);
-        }else{
-          setImg(noIMG)
+        } else {
+          setImg(noIMG);
         }
       });
   }, [id]);
@@ -80,7 +80,10 @@ function DetailProduct({ id }) {
             <div style={{ fontWeight: "bold", color: "#fb5607" }}> {pid}</div>
             <div style={{ color: "#e76f51" }}>{pname}</div>
             <div style={{ fontSize: "small" }}>... {detail}</div>
-            <div className="d-flex " style={{ fontSize: "small",gap:5 }}> <div style={{fontWeight:"bolder"}} > ประเภท : </div>  {ptype}</div>
+            <div className="d-flex " style={{ fontSize: "small", gap: 5 }}>
+              {" "}
+              <div style={{ fontWeight: "bolder" }}> ประเภท : </div> {ptype}
+            </div>
           </div>
         </div>
         <div
@@ -124,12 +127,22 @@ function DetailProduct({ id }) {
         <div>
           <img src="https://picsum.photos/250/250" />
         </div>
-        <div className="mt-2" >ที่อยู่ปัจจุบัน : sljdhfskjldvs</div>
+        <div className="mt-2">ที่อยู่ปัจจุบัน : sljdhfskjldvs</div>
       </div>
       <div className="bg-white p-4 shadow-md rounded">
         <QRCode id={id} />
       </div>
-      <NavLink className="btn btn-sm btn-warning" to={`/edit/${id}`} >แก้ไข</NavLink>
+      <div className="d-flex flex-row justify-content-around">
+        <NavLink className="btn col btn-warning" to={`/edit/${id}`}>
+          แก้ไข
+        </NavLink>
+        <NavLink className="btn col-5 btn-secondary" to={`/check/${id}`} >
+          เพิ่มการตรวจสอบ
+        </NavLink>
+        <NavLink className="btn col-4 btn-info" to={`/update/${id}`}  >
+          เพิ่มการอัพเดท
+        </NavLink>
+      </div>
     </div>
   );
 }
