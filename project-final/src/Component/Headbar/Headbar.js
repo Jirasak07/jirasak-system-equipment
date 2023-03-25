@@ -75,36 +75,6 @@ function Headbar() {
             <NavLink to="/product" className="navlink" activeClassName="active">
               <FaListUl /> ครุภัณฑ์ทั้งหมด
             </NavLink>
-{/* 
-            <div
-              className="navlink" 
-              onClick={() => {
-                manage();
-              }}
-            >
-              <FaCoins /> จัดการครุภัณฑ์ 
-            </div>
-            <div className="ml-2"  >
-              <NavLink
-                to="/check"
-                className="navlink"
-                activeClassName="active"
-                onClick={() => setIsActive(true)}
-                style={{ fontSize: 16 }}
-              >
-               <HiOutlineDocumentSearch/> ตรวจสอบครุภัณฑ์
-              </NavLink>
-              <NavLink
-                to="/update"
-                className="navlink"
-                activeClassName="active"
-                onClick={() => setIsActive(true)}
-                style={{ fontSize: 16 }}
-              >
-              <HiOutlineDocumentDownload/>  อัพเดทครุภัณฑ์
-              </NavLink>
-            </div> */}
-
             <NavLink
               to="/scan"
               className="navlink"

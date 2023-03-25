@@ -19,8 +19,8 @@ function App() {
           <Route index element={<Product/>} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/product" element={<Product/>} />
-          <Route path="/check/:id" element={<CheckPD/>} />
-          <Route path="/update/:id" element={<Update/>} />
+          <Route path="/product/check/:id" element={<CheckPD/>} />
+          <Route path="/product/update/:id" element={<Update/>} />
           <Route path="/scan" element={<ScanQR/>} />
           <Route path="/edit/:id" element={<EditPD/>} />
           <Route path="/manage-ac" element={<ManageAc/>} />

@@ -58,6 +58,7 @@
   padding: 10px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 5px;
   cursor: pointer;
   font-weight: 400;
@@ -67,6 +68,8 @@
 }
 .active {
   color: #0466c8;
+  background-color: #d7e3ff;
+  border-radius: 10px;
 }
 .menuBar {
   position: absolute;

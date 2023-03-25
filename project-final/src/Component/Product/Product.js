@@ -16,6 +16,8 @@ function Product() {
   const [isShown, setIsShown] = useState(false);
   const [isShownAdd, setIsShownAdd] = useState(false);
   const [pid, setPid] = useState();
+  const [chkname, setChkName] = useState();
+  const [status, setStatus] = useState([]);
   const Detail = (val) => {
     setIsShown(!isShown);
     setPid(val);
@@ -23,13 +25,18 @@ function Product() {
   const AddSingle = () => {
     setIsShownAdd(!isShownAdd);
   };
-  const CloseAdd = ()=>{
+  const CloseAdd = () => {
     setIsShownAdd(!isShownAdd);
-  }
+  };
   useEffect(() => {
     axios.get("http://localhost:4444/product").then((res) => {
       console.log(res.data);
       const dMap = res.data;
+
+      axios.get("http://localhost:4444/pstatus").then((res) => {
+        setStatus(res.data);
+      });
+
       setData({
         columns: [
           {
@@ -59,7 +66,14 @@ function Product() {
             pname: <div>{item.pname}</div>,
             sagen: <>{item.sub_aname}</>,
             year: <>{item.fisicalyear}</>,
-            status: <>{item.pstatus_name}</>,
+            status: (
+              <>
+                {" "}
+                {item.statuschk == null
+                  ? item.pstatus_name
+                  : status[parseInt(item.statuschk) - 1].pstatus_name}
+              </>
+            ),
             clickEvent: () => Detail(item.pid),
           })),
         ],
@@ -70,10 +84,17 @@ function Product() {
     <div className="container-fluid p-lg-5 p-md-3 p-0 ">
       <div className="bg-white p-3 " style={{ borderRadius: 15 }}>
         <div className="d-flex justify-content-end">
-          <div className="btn-primary btn btn-sm" onClick={AddSingle} >เพิ่มครุภัณฑ์เดี่ยว</div>
+          <div className="btn-primary btn btn-sm" onClick={AddSingle}>
+            เพิ่มครุภัณฑ์เดี่ยว
+          </div>
           <div className="btn-secondary btn btn-sm">เพิ่มครุภัณฑ์กลุ่ม</div>
         </div>
-        <MDBDataTableV5 data={data} responsive sortable={false} entriesLabel="จำนวนต่อหน้า" />
+        <MDBDataTableV5
+          data={data}
+          responsive
+          sortable={false}
+          entriesLabel="จำนวนต่อหน้า"
+        />
       </div>
       <Pane className="dialog">
         <Dialog

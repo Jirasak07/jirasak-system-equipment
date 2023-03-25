@@ -74,6 +74,7 @@ function AddPD({closeAdd}) {
         pickdate: pickk,
         fisicalyear: event.fisicalyear,
         image: event.pid + typename,
+        userid:1
       })
       .then((res) => {
         if (res.data.status == "success") {

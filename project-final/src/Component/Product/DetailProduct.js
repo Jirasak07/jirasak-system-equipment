@@ -125,7 +125,7 @@ function DetailProduct({ id }) {
         style={{ fontSize: "small" }}
       >
         <div>
-          <img src="https://picsum.photos/250/250" />
+          <img src={imga} width={350} height={350} />
         </div>
         <div className="mt-2">ที่อยู่ปัจจุบัน : sljdhfskjldvs</div>
       </div>
@@ -136,10 +136,10 @@ function DetailProduct({ id }) {
         <NavLink className="btn col btn-warning" to={`/edit/${id}`}>
           แก้ไข
         </NavLink>
-        <NavLink className="btn col-5 btn-secondary" to={`/check/${id}`} >
+        <NavLink className="btn col-5 btn-secondary" to={`/product/check/${id}`}>
           เพิ่มการตรวจสอบ
         </NavLink>
-        <NavLink className="btn col-4 btn-info" to={`/update/${id}`}  >
+        <NavLink className="btn col-4 btn-info" to={`/product/update/${id}`}>
           เพิ่มการอัพเดท
         </NavLink>
       </div>
