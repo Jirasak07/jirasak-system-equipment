@@ -17,7 +17,7 @@ function Product() {
   const [isShownAdd, setIsShownAdd] = useState(false);
   const [pid, setPid] = useState();
   const [chkname, setChkName] = useState();
-  const [status, setStatus] = useState([]);
+  const [status, setStatus] = useState();
   const Detail = (val) => {
     setIsShown(!isShown);
     setPid(val);
@@ -32,11 +32,6 @@ function Product() {
     axios.get("http://localhost:4444/product").then((res) => {
       console.log(res.data);
       const dMap = res.data;
-
-      axios.get("http://localhost:4444/pstatus").then((res) => {
-        setStatus(res.data);
-      });
-
       setData({
         columns: [
           {
@@ -54,6 +49,7 @@ function Product() {
           {
             field: "year",
             label: "ปีที่ตรวจ",
+            sort: "desc",
           },
           {
             field: "status",
@@ -62,17 +58,24 @@ function Product() {
         ],
         rows: [
           ...dMap.map((item) => ({
-            pid: <div>{item.pid}</div>,
-            pname: <div>{item.pname}</div>,
-            sagen: <>{item.sub_aname}</>,
-            year: <>{item.fisicalyear}</>,
+            pid: `${item.pid}`,
+            pname: `${item.pname}`,
+            sagen: `${item.sub_aname}`,
+            year: `${item.fisicalyear}` ,
             status: (
-              <>
-                {" "}
-                {item.statuschk == null
+              `
+                ${item.statuschk == null
                   ? item.pstatus_name
-                  : status[parseInt(item.statuschk) - 1].pstatus_name}
-              </>
+                  : item.statuschk == "1"
+                  ? "ใช้งานปกติ"
+                  : item.statuschk == "2"
+                  ? "ชำรุด(รอซ่อมบำรุง)"
+                  : item.statuschk == "3"
+                  ? "บริจาค"
+                  : item.statuschk == "4"
+                  ? "เสื่อมคุณภาพ(ไม่จำเป็นต้องใช้ในราชการ)"
+                  : "จำหน่ายออกจากบัญชี"}
+                  `
             ),
             clickEvent: () => Detail(item.pid),
           })),
@@ -92,7 +95,7 @@ function Product() {
         <MDBDataTableV5
           data={data}
           responsive
-          sortable={false}
+          sortable={true}
           entriesLabel="จำนวนต่อหน้า"
         />
       </div>
