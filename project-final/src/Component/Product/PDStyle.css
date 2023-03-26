@@ -5,3 +5,10 @@
 .dialog{
   z-index:initial;
 }
+.evidence{
+  font-size: small;
+  cursor: pointer;
+}
+.evidence:hover{
+  color: rgb(122, 185, 26) !important;
+}

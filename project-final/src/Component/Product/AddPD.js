@@ -3,7 +3,9 @@ import { useForm } from "react-hook-form";
 import { SelectField, TextInputField, Button } from "evergreen-ui";
 import axios from "axios";
 import { format } from "date-fns";
-function AddPD({closeAdd}) {
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+function AddPD({ closeAdd }) {
   const [valueType, setValueType] = useState([]);
   const [ptype, setPtype] = useState(1);
   const [valueAgen, setValueAgen] = useState([]);
@@ -12,6 +14,7 @@ function AddPD({closeAdd}) {
   const [pstatus, setPstatus] = useState(1);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(null);
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -19,7 +22,6 @@ function AddPD({closeAdd}) {
   } = useForm({ mode: "onBlur" });
   useEffect(() => {
     axios.get("http://localhost:4444/product-type").then((res) => {
-    
       setValueType(res.data);
     });
     axios.get("http://localhost:4444/subagen").then((res) => {
@@ -49,13 +51,13 @@ function AddPD({closeAdd}) {
     };
   };
   const onSubmit = (event) => {
+    const user_id = localStorage.getItem("user_id");
     var day1 = String(event.buydate).split("/");
     var buy1 = day1[1] + "/" + day1[0] + "/" + day1[2];
     const buydatee = format(new Date(buy1), "yyyy-MM-dd");
     var day2 = String(event.pickdate).split("/");
     var pick = day2[1] + "/" + day2[0] + "/" + day2[2];
     const pickk = format(new Date(pick), "yyyy-MM-dd");
-
     axios
       .post("http://localhost:4444/add-product", {
         pid: event.pid,
@@ -68,28 +70,54 @@ function AddPD({closeAdd}) {
         acquirement: event.ac,
         ptype_id: ptype,
         seller: event.seller,
-        sub_aid: subagen,
-        pstatus_id: pstatus,
         buydate: buydatee,
         pickdate: pickk,
-        fisicalyear: event.fisicalyear,
-        image: event.pid + typename,
-        userid:1
+        image: event.pid + "main" + typename,
       })
       .then((res) => {
-        if (res.data.status == "success") {
-          alert("1234")
+        if (res.data.status === "success") {
           const url = "http://localhost:4444/upload";
           const formData = new FormData();
-          formData.append("photo", file, event.pid + typename);
-          
+          formData.append("photo", file, event.pid +"main" + typename);
           axios.post(url, formData).then((response) => {
-            if(response.data.status == "success"){
-
+            if (response.data.status === "success") {
             }
           });
+          axios
+            .post("http://localhost:4444/save-check", {
+              pid: event.pid,
+              sub_aid: subagen,
+              user_id: user_id,
+              check_year: event.fisicalyear,
+              pstatus_id: pstatus,
+              evidence: "-",
+            })
+            .then((res) => {});
+          axios
+            .post("http://localhost:4444/save-update", {
+              pid: event.pid,
+              sub_aid: subagen,
+              userid: user_id,
+              pstatus_id: pstatus,
+              imageupdate: event.pid +"main"+ typename,
+              update_detail: "fist add data",
+            })
+            .then((res) => {
+              Swal.fire({
+                icon: "success",
+                text: "เพิ่มครุภัณฑ์หมายเลข" + event.pid + "เสร็จสิ้น",
+                timer: 1500,
+              }).then((val) => {
+                navigate("/product")
+                window.location.reload()
+              });
+            });
         } else if (res.data.status === "error") {
-          alert(res.data.status);
+          Swal.fire({
+            icon:'error',
+            text:'มีครุภัณฑ์หมายเลข'+event.pid+"อยู่ในระบบแล้ว",
+            timer:2000
+          })
         }
       });
   };
@@ -390,11 +418,19 @@ function AddPD({closeAdd}) {
               )}
             </div>
           </div>
-          <div className="d-flex flex-row justify-content-end pb-3" style={{gap:5}}>
+          <div
+            className="d-flex flex-row justify-content-end pb-3"
+            style={{ gap: 5 }}
+          >
             <Button appearance="primary" intent="success" type="submit">
               บันทึก
             </Button>
-            <Button appearance="primary" intent="danger" type="button" onClick={closeAdd}>
+            <Button
+              appearance="primary"
+              intent="danger"
+              type="button"
+              onClick={closeAdd}
+            >
               ปิด
             </Button>
           </div>

@@ -5,6 +5,8 @@ import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { NavLink, useParams } from "react-router-dom";
 import noIMG from "../../assets/no-photo-available.png";
+import "./PDStyle.css";
+import { Button } from "evergreen-ui";
 
 function DetailProduct({ id }) {
   const [data, setData] = useState();
@@ -24,6 +26,7 @@ function DetailProduct({ id }) {
   const [textStatus, setTextStatus] = useState("");
   const [ptype, setPtype] = useState();
   const [imga, setImg] = useState();
+  const [evd, setEvd] = useState(false);
 
   useEffect(() => {
     axios
@@ -60,6 +63,41 @@ function DetailProduct({ id }) {
         }
       });
   }, [id]);
+  const [filenames, setFileNames] = useState(null);
+  useEffect(() => {
+    axios
+      .post("http://localhost:4444/find-check", {
+        pid: id,
+      })
+      .then((res) => {
+        const data = res.data[0];
+        if (res.data.status === "nodata") {
+          setEvd(true);
+        } else {
+          if (data.evidence === "-") {
+            setEvd(true);
+          } else {
+            setFileNames(data.evidence);
+            setSname(data.sub_aname)
+          }
+        }
+      });
+  }, []);
+  const handleDownload = async () => {
+    const response = await axios.get(
+      `http://localhost:4444/download/${filenames}`,
+      {
+        responseType: "blob",
+      }
+    );
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filenames);
+    document.body.appendChild(link);
+    link.click();
+  };
+
   return (
     <div
       className=" py-2 d-flex flex-column"
@@ -118,6 +156,16 @@ function DetailProduct({ id }) {
             สถานะ : <div className={textStatus}>{status} </div>{" "}
           </div>
         </div>
+        <div className=" px-3 d-flex justify-content-end">
+          <Button
+            disabled={evd}
+            appearance="minimal"
+            intent="success"
+            onClick={handleDownload}
+          >
+            เอกสารอ้างอิง
+          </Button>
+        </div>
       </div>
 
       <div
@@ -136,7 +184,10 @@ function DetailProduct({ id }) {
         <NavLink className="btn col btn-warning" to={`/edit/${id}`}>
           แก้ไข
         </NavLink>
-        <NavLink className="btn col-5 btn-secondary" to={`/product/check/${id}`}>
+        <NavLink
+          className="btn col-5 btn-secondary"
+          to={`/product/check/${id}`}
+        >
           เพิ่มการตรวจสอบ
         </NavLink>
         <NavLink className="btn col-4 btn-info" to={`/product/update/${id}`}>

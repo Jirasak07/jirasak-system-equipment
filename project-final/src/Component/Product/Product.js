@@ -64,7 +64,7 @@ function Product() {
             pid: `${item.pid}`,
             pname: `${item.pname}`,
             sagen: `${item.sub_aname}`,
-            year: `${item.fisicalyear}` ,
+            year: `${item.check_year}` ,
             status: (
               `
                 ${item.statuschk == null

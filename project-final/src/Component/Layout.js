@@ -19,7 +19,7 @@ const Layout = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.status == "ok") {
-            navigate("/dashboard")
+            // navigate("/dashboard")
           } else {
             navigate("/login")
           }
