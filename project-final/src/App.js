@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import LoginPage from "./Auth/LoginPage";
 import ManageAc from "./Component/Account/ManageAc";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import Layout from "./Component/Layout";
@@ -15,17 +16,18 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Layout/>}>
-          <Route index element={<Product/>} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/product" element={<Product/>} />
-          <Route path="/product/check/:id" element={<CheckPD/>} />
-          <Route path="/product/update/:id" element={<Update/>} />
-          <Route path="/scan" element={<ScanQR/>} />
-          <Route path="/edit/:id" element={<EditPD/>} />
-          <Route path="/manage-ac" element={<ManageAc/>} />
-          <Route path="/scan/scanc" element={<QRCodeScan/>} />
+        <Route path="/" element={<Layout />}>
+          {/* <Route index path="/dashboard" element={<Dashboard />} /> */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/product/check/:id" element={<CheckPD />} />
+          <Route path="/product/update/:id" element={<Update />} />
+          <Route path="/scan" element={<ScanQR />} />
+          <Route path="/edit/:id" element={<EditPD />} />
+          <Route path="/manage-ac" element={<ManageAc />} />
+          <Route path="/scan/scanc" element={<QRCodeScan />} />
         </Route>
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );

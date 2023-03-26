@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, SelectField, TextInputField } from "evergreen-ui";
 import axios from "axios";
 import { format, addYears } from "date-fns";
 import { th } from "date-fns/locale";
+import Swal from "sweetalert2";
 
 function CheckPD() {
+  const [file, setFile] = useState(null);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const navigate = useNavigate()
   const { id } = useParams();
   const date = new Date();
   const month = new Date(date).getMonth() + 1;
@@ -19,7 +25,7 @@ function CheckPD() {
   const [updateSub, setUpdateSub] = useState();
   const [updatePstatus, setUpdatePstatus] = useState();
   const [updateUser, setUpdateUser] = useState();
-  const [disable,setDisable] = useState(true)
+  const [disable, setDisable] = useState(true);
   useEffect(() => {
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setDataPstatus(res.data);
@@ -37,10 +43,11 @@ function CheckPD() {
         pid: id,
       })
       .then((res) => {
-        const data = res.data['results'];
-        console.table(res.data.status)
+        const data = res.data["results"];
+        console.log(data)
+        console.table(res.data.status);
         if (res.data.status == "empty") {
-          setUpdateDate("no data")
+          setUpdateDate("no data");
           setUpdateSub(data[0].sub_aname);
           setUpdateUser("no data");
           setUpdatePstatus(data[0].pstatus_name);
@@ -56,24 +63,80 @@ function CheckPD() {
           setUpdatePstatus(data[0].pstatus_name);
         }
       });
-      axios.post("http://localhost:4444/check-detail",{
-        pid:id
-      }).then((res)=>{
-        console.log(res.data)
-        setPstatus(res.data[0].pstatus_id)
-        setSaid(res.data[0].sub_aid)
+    axios
+      .post("http://localhost:4444/check-detail", {
+        pid: id,
       })
-    return () => {};
+      .then((res) => {
+        console.log(res.data);
+        setPstatus(res.data[0].pstatus_id);
+        setSaid(res.data[0].sub_aid);
+      });
   }, []);
-  const changeStatus=(e)=>{
-    setPstatus(e.target.value)
-    if(e.target.value == 5 || e.target.value == 3){
-      setDisable(false)
+  const changeStatus = (e) => {
+    setPstatus(e.target.value);
+    if (e.target.value == 5 || e.target.value == 3) {
+      setDisable(false);
+    } else {
+      setDisable(true);
     }
-  }
-  const onSubmit=()=>{
+  };
+  const onSubmit = async () => {
+    const userid = localStorage.getItem("user_id");
+    if (file == null && pstatus == 5 || pstatus == 3) {
+      Swal.fire({
+        icon:'error',
+        title:'กรุณาแนบหลักฐาน'
+      })
+    } else {
+      axios
+        .post("http://localhost:4444/save-check", {
+          pid: id,
+          sub_aid: said,
+          user_id: userid,
+          check_year: fisiyear,
+          pstatus_id: pstatus,
+          evidence: "-",
+        })
+        .then(async (res) => {
+          const status = res.data.status;
+          if (status === "success") {
+            Swal.fire({
+              icon: "success",
+              title:'เพิ่มการตรวจสอบเสร็จสิ้น',
+              timer:1500,
+              showConfirmButton:false
+            }).then(async (val)=>{
+               if (pstatus == 5 || pstatus == 3) {
+              const formData = new FormData();
+              formData.append("file", file);
+              formData.append("pid", id);
+              await axios.post("http://localhost:4444/upload-file", formData);
+            }
+            axios.post("http://localhost:4444/save-update",{
+              pid:id,
+              sub_aid:'',
+              user_id:'',
+              update_date:'',
+              pstatus_id:'',
+              imageupdate:'',
+              update_detail:''
+            })
+            navigate("/product")
+            })
+           
+          } else if (status === "error") {
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถเพิ่มการตรวจสอบได้",
+            });
+          }
+        });
+    }
+  };
+  const onSubmitOld = () => {
 
-  }
+  };
   return (
     <div className="pt-4 container ">
       <div className="d-flex flex-column" style={{ fontSize: 16 }}>
@@ -158,12 +221,12 @@ function CheckPD() {
                 label="ปีงบประมาณที่ตรวจ"
                 height="50px"
                 width="100%"
-              maxLength={4}
-              minLength={4}
+                maxLength={4}
+                minLength={4}
                 style={{ fontFamily: "'Kanit', sans-serif" }}
                 defaultValue={fisiyear}
                 value={fisiyear}
-                onChange={(e)=>setFisiYear(e.target.value)}
+                onChange={(e) => setFisiYear(e.target.value)}
               />
               <SelectField
                 label="หน่วยงานที่ติดตั้ง"
@@ -173,7 +236,9 @@ function CheckPD() {
                 onChange={(e) => setSaid(e.target.value)}
               >
                 {dataSaid.map((item, index) => (
-                  <option key={index} value={item.sub_aid}>{item.sub_aname}</option>
+                  <option key={index} value={item.sub_aid}>
+                    {item.sub_aname}
+                  </option>
                 ))}
               </SelectField>
               <SelectField
@@ -181,7 +246,7 @@ function CheckPD() {
                 height="50px"
                 style={{ fontFamily: "'Kanit', sans-serif" }}
                 value={pstatus}
-                onChange={(e)=>changeStatus()}
+                onChange={changeStatus}
               >
                 {dataPstatus.map((item, index) => (
                   <option key={index} value={item.pstatus_id}>
@@ -190,10 +255,11 @@ function CheckPD() {
                 ))}
               </SelectField>
               <TextInputField
-              disabled={disable}
-              required={!disable}
+                disabled={disable}
+                required={!disable}
                 type="file"
                 label="เอกสารหลักฐาน"
+                onChange={handleFileChange}
                 style={{ fontFamily: "'Kanit', sans-serif" }}
               />
               <div

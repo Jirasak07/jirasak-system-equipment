@@ -66,7 +66,7 @@ function Dashboard() {
       <div className="pt-4 ">
         <div className="d-flex flex-xl-row flex-column bg-white" style={{ borderRadius: 15 }}>
           <div className="col-12 col-xl-8" style={{overflow:"auto"}} >
-            <div className=" p-4" style={{minHeight:350,minWidth:800}} >
+            <div className=" p-4" style={{height:450,width:850}} >
               <BarChart />
             </div>
           </div>

@@ -1,0 +1,81 @@
+import axios from "axios";
+import { Button, TextInputField } from "evergreen-ui";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import imgLogo from "../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+function LoginPage() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [pass, setPass] = useState("");
+  const onSubmit = () => {
+    axios
+      .post("http://localhost:4444/login", {
+        username: username,
+        password: pass,
+      })
+      .then((res) => {
+        console.table(res.data)
+        if(res.data.status === "ok" ){
+            Swal.fire({
+                icon:"success",
+                title:"ยินดีต้อนรับเข้าสู่ระบบ"
+            }).then((val) =>{
+                localStorage.setItem("user_id",res.data.user_id)
+                localStorage.setItem("main_aid",res.data.main_aid)
+                localStorage.setItem("token",res.data.token)
+                  navigate("/dashboard");
+            })
+        }
+        // alert(JSON.stringify(res.data))
+       
+      });
+  };
+  return (
+    <div
+      className="container d-flex align-items-center justify-content-center"
+      style={{ width: "100vw", height: "100vh" }}
+    >
+      <div
+        className="card w-100 p-4"
+        style={{ minWidth: "375px", maxWidth: "550px", minHeight: "500px" }}
+      >
+        <div className="d-flex dlex-row justify-content-center">
+          <img src={imgLogo} width={110} />
+        </div>
+        <div className="text-center pt-2" style={{ fontSize: 18 }}>
+          ระบบตรวจสอบครุภัณฑ์
+        </div>
+        <div className="d-flex flex-column justify-content-center align-items-center mt-2">
+          <TextInputField
+            onChange={(e) => setUsername(e.target.value)}
+            name="username"
+            label="Username"
+            width={250}
+          />
+          <TextInputField
+            onChange={(e) => setPass(e.target.value)}
+            name="password"
+            type="password"
+            label="Password"
+            width={250}
+          />
+        </div>
+        <div className="d-flex flex-row justify-content-center">
+          <Button
+            onClick={onSubmit}
+            appearance="primary"
+            intent="success"
+            width={250}
+          >
+            เข้าสู่ระบบ
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default LoginPage;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MDBDataTableV5 } from "mdbreact";
+import { MDBDataTable } from "mdbreact";
 import axios from "axios";
 import { AiFillEye } from "react-icons/ai";
 import "./PDStyle.css";
@@ -29,7 +29,10 @@ function Product() {
     setIsShownAdd(!isShownAdd);
   };
   useEffect(() => {
-    axios.get("http://localhost:4444/product").then((res) => {
+    const main_aid = localStorage.getItem("main_aid")
+    axios.post("http://localhost:4444/product",{
+      main_aid:main_aid
+    }).then((res) => {
       console.log(res.data);
       const dMap = res.data;
       setData({
@@ -92,7 +95,7 @@ function Product() {
           </div>
           <div className="btn-secondary btn btn-sm">เพิ่มครุภัณฑ์กลุ่ม</div>
         </div>
-        <MDBDataTableV5
+        <MDBDataTable
           data={data}
           responsive
           sortable={true}
