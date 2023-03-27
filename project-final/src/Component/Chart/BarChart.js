@@ -47,10 +47,16 @@ function BarChart() {
       },
     },
   };
+  const main_aid = localStorage.getItem("main_aid")
   useEffect(() => {
     axios.get("http://localhost:4444/pstatus").then((res)=>{
       console.log(res.data)
     })
+    // axios.post("http://localhost:4444/normall",{
+    //   main_aid:main_aid
+    // }).then((res)=>{
+
+    // })
   },[]);
   const data = {
     labels,

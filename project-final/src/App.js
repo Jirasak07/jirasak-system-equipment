@@ -12,6 +12,7 @@ import ScanQR from "./Component/ManageProduct/ScanQR";
 import Update from "./Component/ManageProduct/Update";
 import EditPD from "./Component/Product/EditPD";
 import Product from "./Component/Product/Product";
+import Report from "./Component/Report/Report";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/manage-ac" element={<ManageAc />} />
           <Route path="/scan/scanc" element={<QRCodeScan />} />
           <Route path="/manage-ag" element={<ManageAgen/>} />
+          <Route path="/report" element={<Report/>} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
       </Routes>

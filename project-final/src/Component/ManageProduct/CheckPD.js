@@ -29,6 +29,8 @@ function CheckPD() {
   const [disable, setDisable] = useState(true);
   const [imgupdate, setImgUpdate] = useState();
   const main_aid = localStorage.getItem("main_aid");
+  // const [upsaid,setUpsaid] = useState()
+  // const [uppstatus,setUppstatus] = useState()
   useEffect(() => {
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setDataPstatus(res.data);
@@ -52,17 +54,16 @@ function CheckPD() {
       .then((res) => {
         const data = res.data[0];
         console.log("BEE", data);
-          const newDate = new Date(data.update_date);
-          const year_ymd = addYears(newDate, 543);
-          setUpdateDate(
-            format(newDate, "dd/MM") +
-              format(year_ymd, "'/'yyyy", { locale: th })
-          );
-          setUpdateSub(data.sub_aname);
-          setUpdateUser(data.name);
-          setUpdatePstatus(data.pstatus_name);
-          setUpdateDetail(data.update_detail);
-          setImgUpdate(data.imgupdate);
+        const newDate = new Date(data.update_date);
+        const year_ymd = addYears(newDate, 543);
+        setUpdateDate(
+          format(newDate, "dd/MM") + format(year_ymd, "'/'yyyy", { locale: th })
+        );
+        setUpdateSub(data.sub_aname);
+        setUpdateUser(data.name);
+        setUpdatePstatus(data.pstatus_name);
+        setUpdateDetail(data.update_detail);
+        setImgUpdate(data.imgupdate);
       });
     axios
       .post("http://localhost:4444/check-detail", {
@@ -134,7 +135,16 @@ function CheckPD() {
         });
     }
   };
-  const onSubmitOld = () => {};
+  const onSubmitOld = () => {
+    // axios.post("http://localhost:4444/save-check",{
+    //   pid:id,
+    //   sub_aid:,
+    //   user_id:'',
+    //   check_year:'',
+    //   pstatus_id:'',
+    //   evidence:''
+    // })
+  };
   return (
     <div className="pt-4 container ">
       <div className="d-flex flex-column" style={{ fontSize: 16 }}>

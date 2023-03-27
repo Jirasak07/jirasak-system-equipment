@@ -35,12 +35,20 @@ function DetailProduct({ id }) {
 
   useEffect(() => {
     axios
+      .post("http://localhost:4444/yearsmall", {
+        pid: id,
+      })
+      .then((res) => {
+        const data = res.data[0];
+        setFisicalyear(data.check_year);
+      });
+    axios
       .post("http://localhost:4444/detail-pd", {
         pid: id,
       })
       .then((res) => {
         const datat = res.data[0];
-        // console.table(datat);
+        console.table(datat);
         setData(datat);
         setPid(datat.pid);
         setPname(datat.pname);
@@ -53,11 +61,6 @@ function DetailProduct({ id }) {
         setBuydate(format(new Date(datat.buydate), "P", { locale: th }));
         setPickdate(format(new Date(datat.pickdate), "P", { locale: th }));
         setPtype(datat.ptype_name);
-        // if (datat.pstatus_id == 1) {
-        //   setTextStatus("text-success");
-        // } else if (datat.pstatus_id == 2) {
-        //   setTextStatus("text-warning");
-        // }
         if (datat.image.length) {
           setImg("http://localhost:4444/img/" + datat.image);
         } else {
@@ -72,7 +75,7 @@ function DetailProduct({ id }) {
         console.log(res.data);
         const datat = res.data[0];
         setSname(datat.sub_aname);
-        setFisicalyear(datat.check_year);
+
         setStatus(datat.pstatus_name);
       });
     axios
@@ -90,6 +93,7 @@ function DetailProduct({ id }) {
         );
         setUpdateDetail(data.update_detail);
         ImgUpdate("http://localhost:4444/img/" + data.imgupdate);
+        console.log(data.imgupdate)
       });
   }, [id]);
   const [filenames, setFileNames] = useState(null);

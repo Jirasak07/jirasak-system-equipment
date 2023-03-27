@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   TextInputField,
   TextareaField,
@@ -7,22 +7,85 @@ import {
   Button,
 } from "evergreen-ui";
 import axios from "axios";
+import { format, addYears } from "date-fns";
+import { th } from "date-fns/locale";
+import Swal from "sweetalert2";
 
 function Update() {
   const [pstatus, setPstatus] = useState(1);
   const [said, setSaid] = useState(1);
   const [dataPstatus, setDataPstatus] = useState([]);
   const [dataSaid, setDataSaid] = useState([]);
+  const [update_detail, setUpdateDetail] = useState("-");
+  const [previewSource, setPreviewSource] = useState(null);
+  const [img, setImg] = useState();
+  const navigate = useNavigate();
   const { id } = useParams();
+  const user_id = localStorage.getItem("user_id");
   useEffect(() => {
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setDataPstatus(res.data);
     });
-    axios.get("http://localhost:4444/subagen").then((res) => {
-      setDataSaid(res.data);
-    });
+    axios
+      .post("http://localhost:4444/subagen", {
+        pid: id,
+      })
+      .then((res) => {
+        setDataSaid(res.data);
+      });
     return () => {};
   }, []);
+  const onSaveUpdate = () => {
+    const newDate = new Date();
+    axios
+      .post("http://localhost:4444/save-update", {
+        pid: id,
+        sub_aid: said,
+        user_id: user_id,
+        pstatus_id: pstatus,
+        imageupdate: id +format(newDate,'dd-MMM-yyyy HH-m:s')+ typename,
+        update_detail: update_detail,
+      })
+      .then((res) => {
+        const url = "http://localhost:4444/upload";
+        const formData = new FormData();
+        formData.append("photo", file, id + format(newDate,'dd-MMM-yyyy HH-m:s') + typename);
+        axios.post(url, formData).then((response) => {});
+        if (res.data.status == "success") {
+          Swal.fire({
+            icon: "success",
+            text: "อัพเดทข้อมูลเสร็จสิ้น",
+            timer: 2000,
+          }).then((res) => {
+            navigate("/product");
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            text: "เพิ่มการอัพเดทไม่สำเร็จ",
+          });
+        }
+      });
+  };
+  const [images, setImages] = useState([]);
+  const [file, setFile] = useState();
+  const [typename, setTypeName] = useState("");
+  const onImageChange = (e) => {
+    setImages([...e.target.files]);
+    setFile(e.target.files[0]);
+    console.log(e.target.files[0]);
+    // console.log("." + e.target.files[0].type.split("image/")[1]);
+    setTypeName("." + e.target.files[0].type.split("image/")[1]);
+    const filess = e.target.files[0];
+    previewFile(filess);
+  };
+  const previewFile = (fil) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fil);
+    reader.onloadend = () => {
+      setPreviewSource(reader.result);
+    };
+  };
   return (
     <>
       <div className="container pt-4 d-flex flex-row justify-content-center ">
@@ -45,28 +108,52 @@ function Update() {
               อัพเดทข้อมูลครุภัณฑ์หมายเลข {id}
             </div>
             <div className="d-flex flex-column">
-              <TextInputField className="mt-2" type="file" />
-              <SelectField label="หน่วยงานที่ติดตั้ง"
-              value={said}
-              onChange={(e)=>setSaid(e.target.value)}
+              {previewSource && (
+                <img
+                  src={previewSource}
+                  alt="Preview"
+                  className="img-fluid mb-3"
+                  style={{ maxHeight: "300px" }}
+                />
+              )}
+              <TextInputField
+                type="file"
+                onChange={onImageChange}
+                name="photo"
+              />
+              <SelectField
+                label="หน่วยงานที่ติดตั้ง"
+                value={said}
+                onChange={(e) => setSaid(e.target.value)}
               >
-                {dataSaid.map((it,index)=>(
-                  <option key={index} value={it.sub_aid}>{it.sub_aname}</option>
+                {dataSaid.map((it, index) => (
+                  <option key={index} value={it.sub_aid}>
+                    {it.sub_aname}
+                  </option>
                 ))}
               </SelectField>
-              <SelectField label="สถานะครุภัณฑ์">
-                {dataPstatus.map((it,index)=>(
-                  <option key={index} value={it.pstatus_id} > {it.pstatus_name} </option>
+              <SelectField
+                value={pstatus}
+                onChange={(e) => setPstatus(e.target.value)}
+                label="สถานะครุภัณฑ์"
+              >
+                {dataPstatus.map((it, index) => (
+                  <option key={index} value={it.pstatus_id}>
+                    {" "}
+                    {it.pstatus_name}{" "}
+                  </option>
                 ))}
               </SelectField>
               <TextareaField
                 label="รายละเอียดที่อยู่"
                 required
                 lineHeight={0}
+                value={update_detail}
+                onChange={(e) => setUpdateDetail(e.target.value)}
               />
             </div>
             <div>
-              <Button appearance="primary" intent="success">
+              <Button onClick={onSaveUpdate} appearance="primary" intent="success">
                 บันทึกการอัพเดท
               </Button>
             </div>
