@@ -57,7 +57,7 @@ function ManageAc() {
           icon:'error',
           text:res.message,
         })
-      }else{
+      }else if(res.status === "ok"){
         Swal.fire({
           icon:"success",
           text:"เพิ่มผู้ใช้งานเสร็จสิ้น",
