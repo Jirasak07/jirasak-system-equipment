@@ -93,6 +93,15 @@ function Headbar() {
               จัดการผู้ใช้งาน
             </NavLink>
             <NavLink
+              to="/manage-ag"
+              className="navlink"
+              activeClassName="active"
+              onClick={() => setIsActive(false)}
+            >
+              <MdManageAccounts />
+              จัดการหน่วยงาน
+            </NavLink>
+            <NavLink
               to="/report"
               className="navlink"
               activeClassName="active"

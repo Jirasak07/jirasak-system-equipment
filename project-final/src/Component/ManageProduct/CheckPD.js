@@ -11,7 +11,7 @@ function CheckPD() {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
   const date = new Date();
   const month = new Date(date).getMonth() + 1;
@@ -25,43 +25,44 @@ function CheckPD() {
   const [updateSub, setUpdateSub] = useState();
   const [updatePstatus, setUpdatePstatus] = useState();
   const [updateUser, setUpdateUser] = useState();
+  const [updateDetail, setUpdateDetail] = useState();
   const [disable, setDisable] = useState(true);
+  const [imgupdate, setImgUpdate] = useState();
+  const main_aid = localStorage.getItem("main_aid");
   useEffect(() => {
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setDataPstatus(res.data);
     });
-    axios.get("http://localhost:4444/subagen").then((res) => {
-      setDataSaid(res.data);
-    });
+    axios
+      .post("http://localhost:4444/subagen", {
+        main_aid: main_aid,
+      })
+      .then((res) => {
+        setDataSaid(res.data);
+      });
     if (month >= 10) {
       setFisiYear(currentYear + 544);
     } else {
       setFisiYear(currentYear + 543);
     }
     axios
-      .post("http://localhost:4444/update-detail", {
+      .post("http://localhost:4444/lastupdate", {
         pid: id,
       })
       .then((res) => {
-        const data = res.data["results"];
-        console.log(data)
-        console.table(res.data.status);
-        if (res.data.status == "empty") {
-          setUpdateDate("no data");
-          setUpdateSub(data[0].sub_aname);
-          setUpdateUser("no data");
-          setUpdatePstatus(data[0].pstatus_name);
-        } else if (res.data.status == "success") {
-          const newDate = new Date(data[0].update_date);
+        const data = res.data[0];
+        console.log("BEE", data);
+          const newDate = new Date(data.update_date);
           const year_ymd = addYears(newDate, 543);
           setUpdateDate(
             format(newDate, "dd/MM") +
               format(year_ymd, "'/'yyyy", { locale: th })
           );
-          setUpdateSub(data[0].sub_aname);
-          setUpdateUser(data[0].name);
-          setUpdatePstatus(data[0].pstatus_name);
-        }
+          setUpdateSub(data.sub_aname);
+          setUpdateUser(data.name);
+          setUpdatePstatus(data.pstatus_name);
+          setUpdateDetail(data.update_detail);
+          setImgUpdate(data.imgupdate);
       });
     axios
       .post("http://localhost:4444/check-detail", {
@@ -83,11 +84,11 @@ function CheckPD() {
   };
   const onSubmit = async () => {
     const userid = localStorage.getItem("user_id");
-    if (file == null && pstatus == 5 || pstatus == 3) {
+    if ((file == null && pstatus == 5) || pstatus == 3) {
       Swal.fire({
-        icon:'error',
-        title:'กรุณาแนบหลักฐาน'
-      })
+        icon: "error",
+        title: "กรุณาแนบหลักฐาน",
+      });
     } else {
       axios
         .post("http://localhost:4444/save-check", {
@@ -103,28 +104,27 @@ function CheckPD() {
           if (status === "success") {
             Swal.fire({
               icon: "success",
-              title:'เพิ่มการตรวจสอบเสร็จสิ้น',
-              timer:1500,
-              showConfirmButton:false
-            }).then(async (val)=>{
-               if (pstatus == 5 || pstatus == 3) {
-              const formData = new FormData();
-              formData.append("file", file);
-              formData.append("pid", id);
-              await axios.post("http://localhost:4444/upload-file", formData);
-            }
-            axios.post("http://localhost:4444/save-update",{
-              pid:id,
-              sub_aid:'',
-              user_id:'',
-              update_date:'',
-              pstatus_id:'',
-              imageupdate:'',
-              update_detail:''
-            })
-            navigate("/product")
-            })
-           
+              title: "เพิ่มการตรวจสอบเสร็จสิ้น",
+              timer: 1500,
+              showConfirmButton: false,
+            }).then(async (val) => {
+              if (pstatus == 5 || pstatus == 3) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("pid", id);
+                await axios.post("http://localhost:4444/upload-file", formData);
+              }
+              axios.post("http://localhost:4444/save-update", {
+                pid: id,
+                sub_aid: said,
+                user_id: userid,
+                update_date: new Date(),
+                pstatus_id: pstatus,
+                imageupdate: imgupdate,
+                update_detail: updateDetail,
+              });
+              navigate("/product");
+            });
           } else if (status === "error") {
             Swal.fire({
               icon: "error",
@@ -134,9 +134,7 @@ function CheckPD() {
         });
     }
   };
-  const onSubmitOld = () => {
-
-  };
+  const onSubmitOld = () => {};
   return (
     <div className="pt-4 container ">
       <div className="d-flex flex-column" style={{ fontSize: 16 }}>

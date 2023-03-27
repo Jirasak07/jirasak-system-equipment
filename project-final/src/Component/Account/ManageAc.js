@@ -19,7 +19,9 @@ function ManageAc() {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [maindata, setMainData] = useState([]);
-  const [main_aid, setMain_aid] = useState(null);
+  const [main_aid, setMain_aid] = useState(1);
+  const [color, setColor] = useState("");
+  const [maxuid, setMaxid] = useState();
   const changeUstatus = () => {
     axios
       .post("http://localhost:4444/change-status", {
@@ -44,31 +46,34 @@ function ManageAc() {
         }
       });
   };
-  const onSubmitUser=()=>{
-    axios.post("http://localhost:4444/add-user",{
-      username:username,
-      name:nameAd,
-      password:password,
-      main_aid:main_aid,
-      ustatus_id:1,
-    }).then((res)=>{
-      if(res.status === "error"){
-        Swal.fire({
-          icon:'error',
-          text:res.message,
-        })
-      }else if(res.status === "ok"){
-        Swal.fire({
-          icon:"success",
-          text:"เพิ่มผู้ใช้งานเสร็จสิ้น",
-          timer:2500,
-          showConfirmButton:false
-        }).then((res)=>{
-          window.location.reload()
-        })
-      }
-    })
-  }
+  const onSubmitUser = () => {
+    axios
+      .post("http://localhost:4444/add-user", {
+        maxid: maxuid,
+        username: username,
+        name: nameAd,
+        password: password,
+        main_aid: main_aid,
+        ustatus_id: 1,
+      })
+      .then((res) => {
+        if (res.data.status === "error") {
+          Swal.fire({
+            icon: "error",
+            text: res.data.message,
+          });
+        } else if (res.data.status === "ok") {
+          Swal.fire({
+            icon: "success",
+            text: res.data.message,
+            timer: 2500,
+            showConfirmButton: false,
+          }).then((res) => {
+            window.location.reload();
+          });
+        }
+      });
+  };
   const openDialog = (val) => {
     axios
       .post("http://localhost:4444/user-detail", {
@@ -86,6 +91,14 @@ function ManageAc() {
     setUstatus(res.data);
   });
   useEffect(() => {
+    axios.get("http://localhost:4444/maxuserid").then((res) => {
+      const maxid = res.data[0].maxid;
+      if (maxid === "null" || maxid === 0) {
+        setMaxid(1);
+      } else if (maxid > 0) {
+        setMaxid(maxid + 1);
+      }
+    });
     axios.get("http://localhost:4444/main-agen").then((res) => {
       setMainData(res.data);
     });
@@ -128,7 +141,7 @@ function ManageAc() {
               name: `${item.name}`,
               username: `${item.username}`,
               main: `${item.main_aname}`,
-              status: `${item.ustatus_name}`,
+              status: <div className={item.ustatus_id==1? "text-success":"text-danger"} >{item.ustatus_name}</div>,
               manage: (
                 <Button
                   className="bg-warning border"
@@ -227,7 +240,12 @@ function ManageAc() {
           </SelectField>
         </div>
         <div className="d-flex fle-row justify-content-end p-3 ">
-          <Button onClick={onSubmitUser} width="100%" appearance="primary" intent="success">
+          <Button
+            onClick={onSubmitUser}
+            width="100%"
+            appearance="primary"
+            intent="success"
+          >
             บันทึก
           </Button>
         </div>

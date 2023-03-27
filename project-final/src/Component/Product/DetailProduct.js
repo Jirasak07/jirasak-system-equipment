@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import QRCode from "../QRCode/QRCode";
-import { format } from "date-fns";
+import { format, addYears } from "date-fns";
 import { th } from "date-fns/locale";
 import { NavLink, useParams } from "react-router-dom";
 import noIMG from "../../assets/no-photo-available.png";
@@ -26,6 +26,11 @@ function DetailProduct({ id }) {
   const [textStatus, setTextStatus] = useState("");
   const [ptype, setPtype] = useState();
   const [imga, setImg] = useState();
+  const [imgupdate, ImgUpdate] = useState();
+  const [subUpdate, setSubUpdate] = useState();
+  const [statusUpdate, setStatusUpdate] = useState();
+  const [dateUpdate, setDateUpdate] = useState();
+  const [updateDetail, setUpdateDetail] = useState();
   const [evd, setEvd] = useState(false);
 
   useEffect(() => {
@@ -43,24 +48,48 @@ function DetailProduct({ id }) {
         setQty(datat.qty + " " + datat.unit);
         setFinance(datat.finance);
         setPrice(datat.price);
-        setAc(datat.ac);
+        setAc(datat.acquirement);
         setSeller(datat.seller);
-        setSname(datat.sub_aname);
         setBuydate(format(new Date(datat.buydate), "P", { locale: th }));
         setPickdate(format(new Date(datat.pickdate), "P", { locale: th }));
-        setFisicalyear(datat.fisicalyear);
-        setStatus(datat.pstatus_name);
         setPtype(datat.ptype_name);
-        if (datat.pstatus_id == 1) {
-          setTextStatus("text-success");
-        } else if (datat.pstatus_id == 2) {
-          setTextStatus("text-warning");
-        }
-        if (res.data[0].image) {
-          setImg("http://localhost:4444/img/" + res.data[0].image);
+        // if (datat.pstatus_id == 1) {
+        //   setTextStatus("text-success");
+        // } else if (datat.pstatus_id == 2) {
+        //   setTextStatus("text-warning");
+        // }
+        if (datat.image.length) {
+          setImg("http://localhost:4444/img/" + datat.image);
         } else {
           setImg(noIMG);
         }
+      });
+    axios
+      .post("http://localhost:4444/detail-pd-checklast", {
+        pid: id,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const datat = res.data[0];
+        setSname(datat.sub_aname);
+        setFisicalyear(datat.check_year);
+        setStatus(datat.pstatus_name);
+      });
+    axios
+      .post("http://localhost:4444/lastupdate", {
+        pid: id,
+      })
+      .then((res) => {
+        const data = res.data[0];
+        setSubUpdate(data.sub_aname);
+        setStatusUpdate(data.pstatus_name);
+        const newDate = new Date(data.update_date);
+        const year_ymd = addYears(newDate, 543);
+        setDateUpdate(
+          format(newDate, "dd/MM") + format(year_ymd, "'/'yyyy", { locale: th })
+        );
+        setUpdateDetail(data.update_detail);
+        ImgUpdate("http://localhost:4444/img/" + data.imgupdate);
       });
   }, [id]);
   const [filenames, setFileNames] = useState(null);
@@ -78,7 +107,7 @@ function DetailProduct({ id }) {
             setEvd(true);
           } else {
             setFileNames(data.evidence);
-            setSname(data.sub_aname)
+            setSname(data.sub_aname);
           }
         }
       });
@@ -149,22 +178,22 @@ function DetailProduct({ id }) {
         </div>
         <div
           style={{ fontSize: "small" }}
-          className="px-3 mt-2 d-flex flex-row justify-content-between"
+          className="px-3 mt-2 d-flex flex-column justify-content-between"
         >
           <div> หน่วยงานที่รับผิดชอบ: {sname}</div>
           <div className="d-flex flex-row" style={{ gap: 5 }}>
             สถานะ : <div className={textStatus}>{status} </div>{" "}
+            <div>
+              <Button
+                disabled={evd}
+                appearance="minimal"
+                intent="success"
+                onClick={handleDownload}
+              >
+                เอกสารอ้างอิง
+              </Button>
+            </div>{" "}
           </div>
-        </div>
-        <div className=" px-3 d-flex justify-content-end">
-          <Button
-            disabled={evd}
-            appearance="minimal"
-            intent="success"
-            onClick={handleDownload}
-          >
-            เอกสารอ้างอิง
-          </Button>
         </div>
       </div>
 
@@ -172,10 +201,15 @@ function DetailProduct({ id }) {
         className="bg-white p-4 shadow-md rounded d-flex flex-column align-items-center "
         style={{ fontSize: "small" }}
       >
+        <div className="p-3">ข้อมูลอัพเดท : {dateUpdate}</div>
         <div>
-          <img src={imga} width={350} height={350} />
+          <img src={imgupdate} width={350} height={250} />
         </div>
-        <div className="mt-2">ที่อยู่ปัจจุบัน : sljdhfskjldvs</div>
+        <div className="d-flex flex-column justify-content-start">
+          <div className="mt-2">หน่วยงานที่ประจำ : {subUpdate}</div>
+          <div className="mt-2">สถานะ : {statusUpdate}</div>
+          <div className="mt-2">ที่อยู่ปัจจุบัน : {updateDetail}</div>
+        </div>
       </div>
       <div className="bg-white p-4 shadow-md rounded">
         <QRCode id={id} />

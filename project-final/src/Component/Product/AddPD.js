@@ -20,11 +20,14 @@ function AddPD({ closeAdd }) {
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
+  const main_aid = localStorage.getItem("main_aid")
   useEffect(() => {
     axios.get("http://localhost:4444/product-type").then((res) => {
       setValueType(res.data);
     });
-    axios.get("http://localhost:4444/subagen").then((res) => {
+    axios.post("http://localhost:4444/subagen",{
+      main_aid:main_aid
+    }).then((res) => {
       setValueAgen(res.data);
     });
     axios.get("http://localhost:4444/pstatus").then((res) => {

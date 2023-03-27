@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import LoginPage from "./Auth/LoginPage";
 import ManageAc from "./Component/Account/ManageAc";
+import ManageAgen from "./Component/Agen/ManageAgen";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import Layout from "./Component/Layout";
 import CheckPD from "./Component/ManageProduct/CheckPD";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/edit/:id" element={<EditPD />} />
           <Route path="/manage-ac" element={<ManageAc />} />
           <Route path="/scan/scanc" element={<QRCodeScan />} />
+          <Route path="/manage-ag" element={<ManageAgen/>} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
       </Routes>
