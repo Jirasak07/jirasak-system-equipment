@@ -8,8 +8,10 @@ import imgLogo from "../../assets/LOGO RGB PNG-สำหรับงานนำ
 import { NavLink, useNavigate } from "react-router-dom";
 import { BiQrScan } from "react-icons/bi";
 import { CgFileDocument } from "react-icons/cg";
-import {HiOutlineDocumentSearch ,HiOutlineDocumentDownload} from "react-icons/hi";
-
+import {
+  HiOutlineDocumentSearch,
+  HiOutlineDocumentDownload,
+} from "react-icons/hi";
 
 function Headbar() {
   const [isShow, setIsShow] = useState(false);
@@ -19,6 +21,12 @@ function Headbar() {
   const manage = () => {
     setIsActive(true);
     navigate("/check");
+  };
+  const Logout = () => {
+    localStorage.removeItem("main_aid");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    navigate("/login");
   };
   return (
     <>
@@ -113,7 +121,8 @@ function Headbar() {
           <div className="pb-4">
             <div
               className=" btn btn-sm d-none rounded d-md-block text-white"
-              style={{ fontSize: 16 ,backgroundColor:"#ef233c"}}
+              style={{ fontSize: 16, backgroundColor: "#ef233c" }}
+              onClick={Logout}
             >
               {" "}
               <MdOutlineLogout /> ออกจากระบบ
