@@ -16,9 +16,15 @@ export const Scanner = (props) => {
   const data = location.state?.id;
   const color = location.state?.color;
   const nameEvent = location.state?.data;
+  const [path,setPath] = useState()
   const [cameraList, setCameraList] = useState([]);
   const [activeCamera, setActiveCamera] = useState();
   useEffect(() => {
+    if(data == "1"){
+      setPath("update")
+    }else if(data == "2"){
+      setPath("check")
+    }
     html5QrCode = new Html5Qrcode("reader");
     getCameras();
     const oldRegion = document.getElementById("qr-shaded-region");
@@ -42,7 +48,7 @@ export const Scanner = (props) => {
           timer: 1500,
           timerProgressBar: true,
         }).then((res) => {
-          navigate("/product/check/" + decodedText);
+          navigate(`/product/${path}/` + decodedText);
         });
       } else if (promise != "KPRU") {
         Swal.fire({

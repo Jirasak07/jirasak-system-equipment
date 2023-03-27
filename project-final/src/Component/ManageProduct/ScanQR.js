@@ -15,7 +15,7 @@ function ScanQR() {
         </div>
         <div
           className="bg-white card p-3 d-flex flex-row justify-content-center "
-          style={{ gap: 10 }}
+          style={{ gap: 10,minHeight:500 }}
         >
           <NavLink
             state={{ data: "อัพเดทข้อมูล", id: "1" ,color:"#4361ee"}}
