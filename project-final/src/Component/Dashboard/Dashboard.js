@@ -6,14 +6,46 @@ import { ImClock2 } from "react-icons/im";
 import { BiTime } from "react-icons/bi";
 import BarChart from "../Chart/BarChart";
 import PieChart from "../Chart/PieChart";
-
+import axios from "axios";
 function Dashboard() {
+  const [canchk, setCanChk] = useState(null);
+  const [checked, setChecked] = useState(null);
+  const [wait, setWait] = useState(null);
+  const date = new Date();
+  const month = new Date(date).getMonth() + 1;
+  const currentYear = new Date(date).getFullYear();
+  const [fisiyear, setFisiYear] = useState(null);
   useEffect(() => {
-    console.log("mouth");
+    if (month >= 10) {
+      setFisiYear(currentYear + 544);
+    } else {
+      setFisiYear(currentYear + 543);
+    }
+    console.log(fisiyear);
+    axios.get("http://localhost:4444/can-check").then((res) => {
+      setCanChk(res.data[0].cancheck);
+    });
+
+    axios
+      .post("http://localhost:4444/checked", {
+        year: fisiyear,
+      })
+      .then((res) => {
+        setChecked(res.data[0].checked);
+      });
+    axios
+      .post("http://localhost:4444/waiting", {
+        year: fisiyear,
+        year2:fisiyear
+      })
+      .then((res) => {
+        console.log(res.data[0].waiting);
+        setWait(res.data[0].waiting);
+      });
     return () => {
       console.log("unmouth");
     };
-  }, []);
+  });
   return (
     <div className="px-md-5 px-0  py-4 ">
       <div
@@ -28,7 +60,7 @@ function Dashboard() {
             <div className="col-8 text-card  ">
               <div className="card-text">ตรวจสอบได้</div>
               <div className="text-incard">
-                <div className=" resualt ">0</div>
+                <div className=" resualt ">{canchk}</div>
                 <div>รายการ</div>
               </div>
             </div>
@@ -42,7 +74,7 @@ function Dashboard() {
             <div className="col-8 text-card  ">
               <div className="card-text">ตรวจสอบแล้ว</div>
               <div className="text-incard">
-                <div className=" resualt ">0</div>
+                <div className=" resualt ">{checked}</div>
                 <div>รายการ</div>
               </div>
             </div>
@@ -56,7 +88,7 @@ function Dashboard() {
             <div className="col-8 text-card  ">
               <div className="card-text">รอตรวจสอบ</div>
               <div className="text-incard">
-                <div className=" resualt ">0</div>
+                <div className=" resualt ">{wait}</div>
                 <div>รายการ</div>
               </div>
             </div>
@@ -64,9 +96,12 @@ function Dashboard() {
         </div>
       </div>
       <div className="pt-4 ">
-        <div className="d-flex flex-xl-row flex-column bg-white" style={{ borderRadius: 15 }}>
-          <div className="col-12 col-xl-8" style={{overflow:"auto"}} >
-            <div className=" p-4" style={{height:450,width:850}} >
+        <div
+          className="d-flex flex-xl-row flex-column bg-white"
+          style={{ borderRadius: 15 }}
+        >
+          <div className="col-12 col-xl-8" style={{ overflow: "auto" }}>
+            <div className=" p-4" style={{ height: 450, width: 850 }}>
               <BarChart />
             </div>
           </div>
