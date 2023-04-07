@@ -64,7 +64,7 @@ function BarChart() {
       {
         label: 'ใช้งานปกติ',
         data: [20, 15, 35, 60, 12],
-        backgroundColor: "#c1fba4",
+        backgroundColor: "#8cd867",
         borderWidth:2,
         borderColor: '#8cd867',
 
@@ -72,7 +72,7 @@ function BarChart() {
       {
         label:  "ชำรุด(รอซ่อมบำรุง)",
         data: [4, 16, 37, 81, 15],
-        backgroundColor: "#fff2b2",
+        backgroundColor: "#ffd000",
         borderWidth:2,
         borderColor: '#ffd000',
 
@@ -80,21 +80,21 @@ function BarChart() {
       {
         label:  "บริจาค",
         data: [15, 16, 3, 5, 14],
-        backgroundColor: "#bde0fe",
+        backgroundColor: "#4895ef",
         borderWidth:2,
         borderColor: '#4895ef',
       },
       {
         label: "เสื่อมคุณภาพ(ไม่จำเป็นต้องใช้ในราชการ)",
         data: [6, 4, 7, 8, 15],
-        backgroundColor: "#ff7477",
+        backgroundColor: "#dd2d4a",
         borderWidth:2,
         borderColor: '#dd2d4a',
       },
       {
         label: "จำหน่ายออกจากบัญชี",
         data: [12, 13, 4, 18, 19],
-        backgroundColor: "#e0aaff",
+        backgroundColor: "#c77dff",
         borderWidth:2,
         borderColor: '#c77dff',
       },

@@ -150,7 +150,7 @@ function DetailProduct({ id }) {
           >
             <div style={{ fontWeight: "bold", color: "#fb5607" }}> {pid}</div>
             <div style={{ color: "#e76f51" }}>{pname}</div>
-            <div style={{ fontSize: "small" }}>... {detail}</div>
+            <div style={{ fontSize: 14 }}>... {detail}</div>
             <div className="d-flex " style={{ fontSize: "small", gap: 5 }}>
               {" "}
               <div style={{ fontWeight: "bolder" }}> ประเภท : </div> {ptype}
@@ -159,7 +159,7 @@ function DetailProduct({ id }) {
         </div>
         <div
           className="d-flex flex-row mt-2 px-3 justify-content-between "
-          style={{ gap: 5, fontSize: "small" }}
+          style={{ gap: 5, fontSize: 14 }}
         >
           <div>จำนวน : {qty} </div>
           <div>ประเภทเงิน : {finance}</div>

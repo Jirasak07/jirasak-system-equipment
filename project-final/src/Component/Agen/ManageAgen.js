@@ -98,7 +98,7 @@ function ManageAgen() {
   return (
     <div className="container pt-3">
       <div className="py-2 d-flex flex-row align-items-center justify-content-between ">
-        <div>หน่วยงานทั้งหมด</div>
+        <div>ตารางแสดงหน่วยงานทั้งหมด</div>
         <div>
           <Button appearance="primary" intent="primary" onClick={openDialog}>
             เพิ่มหน่วยงานย่อย

@@ -32,15 +32,7 @@ function Dashboard() {
       })
       .then((res) => {
         setChecked(res.data[0].checked);
-      });
-    axios
-      .post("http://localhost:4444/waiting", {
-        year: fisiyear,
-        year2:fisiyear
-      })
-      .then((res) => {
-        console.log(res.data[0].waiting);
-        setWait(res.data[0].waiting);
+        setWait(canchk-res.data[0].checked);
       });
     return () => {
       console.log("unmouth");
@@ -58,10 +50,10 @@ function Dashboard() {
               <AiFillDatabase />
             </div>
             <div className="col-8 text-card  ">
-              <div className="card-text">ตรวจสอบได้</div>
+              <div className="card-text">ครุภัณฑ์ใช้งานอยู่</div>
               <div className="text-incard">
                 <div className=" resualt ">{canchk}</div>
-                <div>รายการ</div>
+                <div>หน่วย</div>
               </div>
             </div>
           </div>
@@ -75,7 +67,7 @@ function Dashboard() {
               <div className="card-text">ตรวจสอบแล้ว</div>
               <div className="text-incard">
                 <div className=" resualt ">{checked}</div>
-                <div>รายการ</div>
+                <div>หน่วย</div>
               </div>
             </div>
           </div>
@@ -86,10 +78,10 @@ function Dashboard() {
               <ImClock2 />
             </div>
             <div className="col-8 text-card  ">
-              <div className="card-text">รอตรวจสอบ</div>
+              <div className="card-text">รอการตรวจสอบ</div>
               <div className="text-incard">
                 <div className=" resualt ">{wait}</div>
-                <div>รายการ</div>
+                <div>หน่วย</div>
               </div>
             </div>
           </div>

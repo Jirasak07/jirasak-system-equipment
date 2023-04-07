@@ -10,19 +10,15 @@ export const data = {
       label: "จำนวน",
       data: [12, 19, 3, 5, 2,],
       backgroundColor: [
-        "#c1fba4",
-        "#fff2b2",
-        "#bde0fe",
-        "#ff7477",
-        "#e0aaff",
-      ],
-      borderWidth: 2,
-      borderColor:[
         "#8cd867",
         "#ffd000",
         "#4895ef",
         "#dd2d4a",
         "#c77dff"
+      ],
+      borderWidth: 2,
+      borderColor:[
+       'white'
       ]
     },
   ],

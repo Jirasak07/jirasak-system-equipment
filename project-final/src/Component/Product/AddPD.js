@@ -134,6 +134,7 @@ function AddPD({ closeAdd }) {
                 inputHeight={40}
                 label="หมายเลขครุภัณฑ์"
                 placeholder="KPRU..."
+              
                 {...register("pid", {
                   required: {
                     value: true,

@@ -71,6 +71,10 @@
   background-color: #d7e3ff;
   border-radius: 10px;
 }
+.deactive{
+  font-size: larger;
+  color: #bb4430;
+}
 .menuBar {
   position: absolute;
   top: 20px;

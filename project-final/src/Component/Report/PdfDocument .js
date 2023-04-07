@@ -1,90 +1,56 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "column",
-    backgroundColor: "#ffffff",
-    padding: 10,
+    flexDirection: "row",
+    backgroundColor: "#E4E4E4",
+    orientation: "landscape",
+    size: "A4",
   },
   table: {
     display: "table",
     width: "auto",
     borderStyle: "solid",
     borderWidth: 1,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
+    borderColor: "#bfbfbf",
+    marginBottom: 20,
   },
   tableRow: {
-    margin: "auto",
     flexDirection: "row",
   },
-  tableColHeader: {
-    width: "25%",
-    borderStyle: "solid",
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 1,
-    backgroundColor: "#f2f2f2",
-    padding: 5,
-    textAlign: "center",
-  },
-  tableCol: {
-    width: "25%",
-    borderStyle: "solid",
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 1,
-    padding: 5,
-    textAlign: "center",
-  },
-  tableCellHeader: {
+  tableCell: {
+    margin: "auto",
+    marginTop: 5,
     fontSize: 12,
+    borderWidth: 1,
+    padding: 5,
+    borderStyle: "solid",
+    borderColor: "#bfbfbf",
+  },
+  tableHeader: {
+    backgroundColor: "#f2f2f2",
     fontWeight: "bold",
   },
-  tableCell: {
-    fontSize: 10,
-  },
-  tableCellEven: {
-    backgroundColor: "#f2f2f2",
+  title: {
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 20,
   },
 });
-function PdfDocument({ data }) {
+
+function PdfDocument() {
   return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.title}>Data from API</Text>
+    <>
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <Text style={styles.title}>Product Detail</Text>
           <View style={styles.table}>
-            <View style={styles.tableRow}>
-              <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeader}>Header 1</Text>
-              </View>
-              <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeader}>Header 2</Text>
-              </View>
-              <View style={styles.tableColHeader}>
-                <Text style={styles.tableCellHeader}>Header 3</Text>
-              </View>
-            </View>
-            {data.map((row) => (
-              <View style={styles.tableRow}>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{row.pid}</Text>
-                </View>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{row.pname}</Text>
-                </View>
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{row.qty}</Text>
-                </View>
-              </View>
-            ))}
+           
           </View>
-        </View>
-      </Page>
-    </Document>
+        </Page>
+      </Document>
+    </>
   );
 }
 

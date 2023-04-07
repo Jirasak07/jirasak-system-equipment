@@ -12,3 +12,10 @@
 .evidence:hover{
   color: rgb(122, 185, 26) !important;
 }
+.scan{
+  background: rgb(255, 255, 255);
+box-shadow: 0 8px 32px 0 rgba(132, 127, 145, 0.473);
+backdrop-filter: blur( 14px );
+-webkit-backdrop-filter: blur( 14px );
+border-radius: 10px;
+}

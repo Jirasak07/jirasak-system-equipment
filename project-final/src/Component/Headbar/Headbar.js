@@ -5,6 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaListUl, FaCoins, FaUserCircle } from "react-icons/fa";
 import { MdDashboard, MdManageAccounts, MdOutlineLogout } from "react-icons/md";
 import imgLogo from "../../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
+import {HiTable} from 'react-icons/hi'
 import { NavLink, useNavigate } from "react-router-dom";
 import { BiQrScan } from "react-icons/bi";
 import { CgFileDocument } from "react-icons/cg";
@@ -31,13 +32,13 @@ function Headbar() {
   return (
     <>
       <div className="d-flex d-md-none headbar p-2 ">
-        <div className="col-3 align-items-center d-flex">
+        <div className="col-2 align-items-center d-flex">
           <GiHamburgerMenu
             style={{ fontSize: 25 }}
             onClick={() => setIsShow(!isShow)}
           />
         </div>
-        <div className="col-6 d-flex justify-content-center align-items-center head-title ">
+        <div className="col-7 d-flex justify-content-center align-items-center head-title " style={{fontSize:14}}>
           ระบบตรวจสอบครุภัณฑ์
         </div>
         <div className="col-3  d-flex justify-content-end align-items-center pr-5 menu">
@@ -106,7 +107,7 @@ function Headbar() {
               activeClassName="active"
               onClick={() => setIsActive(false)}
             >
-              <MdManageAccounts />
+              <HiTable />
               จัดการหน่วยงาน
             </NavLink>
             <NavLink

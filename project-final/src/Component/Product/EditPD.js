@@ -3,10 +3,12 @@ import { useForm } from "react-hook-form";
 import { SelectField, TextInputField, Button } from "evergreen-ui";
 import axios from "axios";
 import { format } from "date-fns";
-import { useParams } from "react-router-dom";
-import noIMG from '../../assets/no-photo-available.png'
+import { useNavigate, useParams } from "react-router-dom";
+import noIMG from "../../assets/no-photo-available.png";
+import Swal from "sweetalert2";
 function EditPD() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [valueType, setValueType] = useState([]);
   const [ptype, setPtype] = useState(1);
   const [valueAgen, setValueAgen] = useState([]);
@@ -25,7 +27,9 @@ function EditPD() {
   const [fisicalyear, setFisicalyear] = useState();
   const [buydate, setBuydate] = useState();
   const [pickdate, setPickdate] = useState();
-
+  const [img, setImg] = useState();
+  const [callImg, setCallImg] = useState();
+  const [pid, setPid] = useState();
   const {
     register,
     handleSubmit,
@@ -41,6 +45,7 @@ function EditPD() {
     // console.log("." + e.target.files[0].type.split("image/")[1]);
     setTypeName("." + e.target.files[0].type.split("image/")[1]);
     const filess = e.target.files[0];
+    setCallImg(pid + "main" + "." + e.target.files[0].type.split("image/")[1]);
     previewFile(filess);
   };
   const previewFile = (fil) => {
@@ -51,15 +56,75 @@ function EditPD() {
     };
   };
   const onSubmit = (e) => {
-    console.log(e.pname);
+    const user_id = localStorage.getItem("user_id");
+    var day1 = String(buydate).split("/");
+    var buy1 = day1[1] + "/" + day1[0] + "/" + day1[2];
+    const buydatee = format(new Date(buy1), "yyyy-MM-dd");
+    var day2 = String(pickdate).split("/");
+    var pick = day2[1] + "/" + day2[0] + "/" + day2[2];
+    const pickk = format(new Date(pick), "yyyy-MM-dd");
+    axios
+      .patch("http://localhost:4444/edit-product", {
+        pname: pname,
+        ptype_id: ptype,
+        pdetail: pdetail,
+        unit: unit,
+        acquirement: ac,
+        price: price,
+        finance: finance,
+        seller: seller,
+        buydate: buydatee,
+        pickdate: pickk,
+        image: callImg,
+        pid: id,
+      })
+      .then((res) => {
+        if (res.data.status == "error") {
+          Swal.fire({
+            icon: "error",
+            text: "เกิดข้อผิดพลาด",
+          });
+        } else if (res.data.status == "success") {
+          if (file == null) {
+            Swal.fire({
+              icon: "success",
+              text: "แก้ไขเสร็จสิ้น",
+              timer: 2000,
+            }).then((res) => {
+              navigate("/product");
+            });
+          } else {
+            const url = "http://localhost:4444/upload";
+            const formData = new FormData();
+            formData.append("photo", file, pid + "main" + typename);
+            axios.post(url, formData).then((response) => {
+              if (response.data.status === "success") {
+                Swal.fire({
+                  icon: "success",
+                  text: "แก้ไขเสร็จสิ้น",
+                  timer: 2000,
+                }).then((res) => {
+                  navigate("/product");
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                });
+              }
+            });
+          }
+        }
+      });
   };
   useEffect(() => {
+    console.log(file);
     axios
       .post("http://localhost:4444/detail-pd", {
         pid: id,
       })
       .then((res) => {
-        console.table(res.data);
+        console.table("This data", res.data);
+        setPid(id);
         setPtype(res.data[0].ptype_id);
         setPstatus(res.data[0].pstatus_id);
         setSubAgen(res.data[0].sub_aid);
@@ -69,14 +134,16 @@ function EditPD() {
         setPrice(res.data[0].price);
         setFinance(res.data[0].finance);
         setSeller(res.data[0].seller);
-        setAc(res.data[0].ac);
+        setAc(res.data[0].acquirement);
         setFisicalyear(res.data[0].fisicalyear);
         setBuydate(format(new Date(res.data[0].buydate), "P"));
         setPickdate(format(new Date(res.data[0].pickdate), "P"));
+        setCallImg(res.data[0].image);
+        setImg(res.data[0].image);
         if (res.data[0].image) {
           setPreviewSource("http://localhost:4444/img/" + res.data[0].image);
-        }else{
-          setPreviewSource(noIMG)
+        } else {
+          setPreviewSource(noIMG);
         }
       });
     axios.get("http://localhost:4444/product-type").then((res) => {
@@ -93,6 +160,9 @@ function EditPD() {
   return (
     <>
       <div className="container p-4 bg-white rounded mt-3">
+        <div className="my-3 text-center">
+          การแก้ไขข้อมูลครุภัณฑ์หมายเลข : {id}
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
           <div className="d-flex flex-row">
             <div className="col-6">
@@ -102,23 +172,6 @@ function EditPD() {
                 placeholder="KPRU..."
                 disabled
                 value={id}
-                {...register("pid", {
-                  required: {
-                    value: false,
-                    message: "กรุณากรอกหมายเลขครุภัณฑ์",
-                  },
-                  pattern: {
-                    value: /\w{6}-\d{2}\.\d{2}-\d{4}/,
-                    message: "กรุณากรอกหมายเลขครุภัณฑ์ให้ถูกต้อง",
-                  },
-                  maxLength: {
-                    value: 17,
-                    message:
-                      "กรุณากรอกหมายเลขครุภัณฑ์ให้ถูกต้อง (ไม่เกิน 17 ตัวอักษร)",
-                  },
-                })}
-                isInvalid={!!errors.pid}
-                validationMessage={errors?.pid ? errors.pid.message : null}
               />
             </div>
             <div className="col-6">
@@ -127,14 +180,8 @@ function EditPD() {
                 label="รายการ"
                 defaultValue={pname}
                 placeholder="ชื่อครุภัณฑ์"
-                {...register("pname", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกชื่อครุภัณฑ์",
-                  },
-                })}
-                isInvalid={!!errors.pname}
-                validationMessage={errors?.pname ? errors.pname.message : null}
+                required={true}
+                onChange={(e) => setPname(e.target.value)}
               />
             </div>
           </div>
@@ -159,16 +206,7 @@ function EditPD() {
                 label="คุณลักษณะ"
                 defaultValue={pdetail}
                 placeholder="รายละเอียดครุภัณฑ์"
-                {...register("pdetail", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกคุณลักษณะครุภัณฑ์",
-                  },
-                })}
-                isInvalid={!!errors.pdetail}
-                validationMessage={
-                  errors?.pdetail ? errors.pdetail.message : null
-                }
+                onChange={(e) => setPdetail(e.target.value)}
               />
             </div>
           </div>
@@ -188,14 +226,8 @@ function EditPD() {
                 label="หน่วย"
                 placeholder="เครื่อ.."
                 defaultValue={unit}
-                {...register("unit", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกหน่วยครุภัณฑ์",
-                  },
-                })}
-                isInvalid={!!errors.unit}
-                validationMessage={errors?.unit ? errors.unit.message : null}
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
               />
             </div>
             <div className="col-6">
@@ -205,18 +237,7 @@ function EditPD() {
                 placeholder="1500.."
                 defaultValue={price}
                 type="number"
-                {...register("price", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกราคา",
-                  },
-                  pattern: {
-                    value: /^[1-9][0-9]*$/,
-                    message: "กรุณากรอกราคาให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.price}
-                validationMessage={errors?.price ? errors.price.message : null}
+                onChange={(e) => setPrice(e.target.value)}
               />
             </div>
           </div>
@@ -224,19 +245,11 @@ function EditPD() {
             <div className="col-6">
               <TextInputField
                 inputHeight={40}
+                value={finance}
                 label="ประเภทเงิน"
                 placeholder="งบประมา.."
                 defaultValue={finance}
-                {...register("finance", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกประเภทเงิน",
-                  },
-                })}
-                isInvalid={!!errors.finance}
-                validationMessage={
-                  errors?.finance ? errors.finance.message : null
-                }
+                onChange={(e) => setFinance(e.target.value)}
               />
             </div>
             <div className="col-6">
@@ -244,61 +257,19 @@ function EditPD() {
                 inputHeight={40}
                 label="ผู้ขาย"
                 placeholder="บริษัท.."
-                defaultValue={seller}
-                {...register("seller", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกราคาให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.seller}
-                validationMessage={
-                  errors?.seller ? errors.seller.message : null
-                }
+                value={seller}
+                onChange={(e) => setSeller(e.target.value)}
               />
             </div>
           </div>
           <div className="d-flex flex-row">
-            <div className="col-6">
+            <div className="col-12">
               <TextInputField
                 inputHeight={40}
                 label="ที่มาครุภัณฑ์"
                 defaultValue={ac}
                 placeholder="ตกลงราค.."
-                {...register("ac", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกที่มาของครุภัณฑ์",
-                  },
-                })}
-                isInvalid={!!errors.ac}
-                validationMessage={errors?.ac ? errors.ac.message : null}
-              />
-            </div>
-            <div className="col-6">
-              <TextInputField
-                inputHeight={40}
-                label="ปีงบประมาณ"
-                defaultValue={fisicalyear}
-                placeholder="2560.."
-                {...register("fisicalyear", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกข้อมูล",
-                  },
-                  minLength: {
-                    value: 4,
-                    message: "กรอกได้ 4 ตัวเลข",
-                  },
-                  maxLength: {
-                    value: 4,
-                    message: "กรอกได้ 4 ตัวเลข",
-                  },
-                })}
-                isInvalid={!!errors.fisicalyear}
-                validationMessage={
-                  errors?.fisicalyear ? errors.fisicalyear.message : null
-                }
+                onChange={(e) => setAc(e.target.value)}
               />
             </div>
           </div>
@@ -309,21 +280,8 @@ function EditPD() {
                 label="วันเดือนปีที่ซื้อ"
                 defaultValue={buydate}
                 placeholder="วว/ดด/ปปปป"
-                {...register("buydate", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกข้อมูล",
-                  },
-                  pattern: {
-                    value:
-                      /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/,
-                    message: "กรุณาป้อนข้อมูลให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.buydate}
-                validationMessage={
-                  errors?.buydate ? errors.buydate.message : null
-                }
+                value={buydate}
+                onChange={(e) => setBuydate(e.target.value)}
               />
             </div>
             <div className="col-6">
@@ -332,54 +290,9 @@ function EditPD() {
                 label="วันเดือนปีที่รับ"
                 defaultValue={pickdate}
                 placeholder="วว/ดด/ปปปป"
-                {...register("pickdate", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกข้อมูล",
-                  },
-                  pattern: {
-                    value:
-                      /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/,
-                    message: "กรุณาป้อนข้อมูลให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.pickdate}
-                validationMessage={
-                  errors?.pickdate ? errors.pickdate.message : null
-                }
+                value={pickdate}
+                onChange={(e) => setPickdate(e.target.value)}
               />
-            </div>
-          </div>
-          <div className="d-flex flex-row">
-            <div className="col-6">
-              <SelectField
-                label="หน่วยงานที่ติดตั้ง"
-                disabled
-                inputHeight={40}
-                value={subagen}
-                onChange={(event) => setSubAgen(event.target.value)}
-              >
-                {valueAgen.map((option, index) => (
-                  <option key={index} value={option.sub_aid}>
-                    {option.sub_aname}
-                  </option>
-                ))}
-              </SelectField>
-            </div>
-            <div className="col-6">
-              <SelectField
-                label="สถานะครุภัณฑ์"
-                disabled
-                inputHeight={40}
-                value={pstatus}
-                onChange={(event) => setPstatus(event.target.value)}
-              >
-                {valuePstatus.map((option, index) => (
-                  <option key={index} value={option.pstatus_id}>
-                    {option.pstatus_name}
-                  </option>
-                ))}
-              </SelectField>
             </div>
           </div>
           <div className="d-flex flex-column">

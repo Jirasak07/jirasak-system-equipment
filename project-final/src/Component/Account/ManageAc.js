@@ -160,7 +160,9 @@ function ManageAc() {
   }, []);
   return (
     <div className="container">
-      <div className="d-flex flex-row justify-content-end">
+    
+      <div className="d-flex flex-row justify-content-between mt-3">
+      <div>ตารางแสดงผู้ใช้งานในระบบ</div>
         <Button
           intent="primary"
           appearance="primary"

@@ -88,12 +88,14 @@ function Product() {
   }, []);
   return (
     <div className="container-fluid p-lg-5 p-md-3 p-0 ">
+      
       <div className="bg-white p-3 " style={{ borderRadius: 15 }}>
-        <div className="d-flex justify-content-end">
-          <div className="btn-primary btn btn-sm" onClick={AddSingle}>
+        <div className="px-4">ตารางแสดงข้อมูลครุภัณฑ์</div>
+        <div className="d-flex justify-content-end" style={{gap:10}}>
+          <Button appearance="minimal" intent="success" className="text-white bg-primary" onClick={AddSingle}>
             เพิ่มครุภัณฑ์เดี่ยว
-          </div>
-          <div className="btn-secondary btn btn-sm">เพิ่มครุภัณฑ์กลุ่ม</div>
+          </Button>
+          <Button appearance="minimal" intent="success" className="btn-secondary text-white">เพิ่มครุภัณฑ์กลุ่ม</Button>
         </div>
         <MDBDataTable
           data={data}
@@ -119,6 +121,8 @@ function Product() {
           isShown={isShownAdd}
           onCloseComplete={() => setIsShownAdd(false)}
           hasFooter={false}
+          minWidth={378}
+          width={800}
         >
           <AddPD closeAdd={CloseAdd} />
         </Dialog>

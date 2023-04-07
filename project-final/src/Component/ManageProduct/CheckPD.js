@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 function CheckPD() {
   const [file, setFile] = useState(null);
   const handleFileChange = (e) => {
+    console.log(e.target.files[0])
     setFile(e.target.files[0]);
   };
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function CheckPD() {
   // const [upsaid,setUpsaid] = useState()
   // const [uppstatus,setUppstatus] = useState()
   useEffect(() => {
+    console.log("file"+file)
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setDataPstatus(res.data);
     });
@@ -77,7 +79,7 @@ function CheckPD() {
   }, []);
   const changeStatus = (e) => {
     setPstatus(e.target.value);
-    if (e.target.value == 5 || e.target.value == 3) {
+    if ( e.target.value == 5 || e.target.value == 3) {
       setDisable(false);
     } else {
       setDisable(true);
@@ -85,7 +87,7 @@ function CheckPD() {
   };
   const onSubmit = async () => {
     const userid = localStorage.getItem("user_id");
-    if ((file == null && pstatus == 5) || pstatus == 3) {
+    if ((file == null && pstatus == 5) ||( file == null && pstatus == 3)) {
       Swal.fire({
         icon: "error",
         title: "กรุณาแนบหลักฐาน",
