@@ -4,18 +4,28 @@ import axios from "axios";
 import PdfDocument from "./PdfDocument ";
 
 function Report() {
-  // const [data, setData] = useState([]);
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const result = await axios.post("http://localhost:4444/product", {
-  //       main_aid: 1,
-  //     });
-  //     setData(result.data);
-  //   };
-  //   fetchData();
-  // }, []);
   return (
-    <PdfDocument  />
+    <div className="p-3 ">
+      <div
+        className="bg-white p-3 "
+        style={{
+          borderRadius: 10,
+          maxWidth: 1400,
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        <div className="text-center">รายงานการตรวจสอบครุภัณฑ์</div>
+        <div
+          className="bg-info d-flex  flex-md-row flex-column px-2 py-2"
+          style={{ justifyContent: "space-evenly",gap:10 }}
+        >
+          <div className="bg-white py-4 rounded col">1</div>
+          <div className="bg-white py-4 rounded col">1</div>
+          <div className="bg-white py-4 rounded col">1</div>
+        </div>
+      </div>
+    </div>
   );
 }
 

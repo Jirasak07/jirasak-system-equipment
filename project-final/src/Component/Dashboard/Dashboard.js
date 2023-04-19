@@ -21,7 +21,6 @@ function Dashboard() {
     } else {
       setFisiYear(currentYear + 543);
     }
-    console.log(fisiyear);
     axios.get("http://localhost:4444/can-check").then((res) => {
       setCanChk(res.data[0].cancheck);
     });

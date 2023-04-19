@@ -47,56 +47,72 @@ function BarChart() {
       },
     },
   };
-  const main_aid = localStorage.getItem("main_aid")
+  const main_aid = localStorage.getItem("main_aid");
+  const [countsub, setCountSub] = useState();
+  const normal = [];
+  const [datas, setDatas] = useState();
   useEffect(() => {
-    axios.get("http://localhost:4444/pstatus").then((res)=>{
-      console.log(res.data)
-    })
-    // axios.post("http://localhost:4444/normall",{
-    //   main_aid:main_aid
-    // }).then((res)=>{
+    console.log("use BarChart")
+    axios
+      .post("http://localhost:4444/countsub", {
+        main_aid: main_aid,
+      })
+      .then((res) => {
+        setCountSub(res.data[0].sub);
+      });
+    for (let i = 1; i <= countsub; i++) {
+      axios
+        .post("http://localhost:4444/barchart", {
+          pstatus_id: 1,
+          sub_aid: i,
+        })
+        .then((res) => {
+          normal.push(res.data[0].data);
+        });
+      setDatas(normal);
+    }
+    return () => {
+      console.log("out Barchart")
+    };
+  }, []);
 
-    // })
-  },[]);
   const data = {
     labels,
     datasets: [
       {
-        label: 'ใช้งานปกติ',
-        data: [20, 15, 35, 60, 12],
+        label: "ใช้งานปกติ",
+        data: datas,
         backgroundColor: "#8cd867",
-        borderWidth:2,
-        borderColor: '#8cd867',
-
+        borderWidth: 2,
+        borderColor: "#8cd867",
       },
       {
-        label:  "ชำรุด(รอซ่อมบำรุง)",
+        label: "ชำรุด(รอซ่อมบำรุง)",
         data: [4, 16, 37, 81, 15],
         backgroundColor: "#ffd000",
-        borderWidth:2,
-        borderColor: '#ffd000',
-
+        borderWidth: 2,
+        borderColor: "#ffd000",
       },
       {
-        label:  "บริจาค",
+        label: "บริจาค",
         data: [15, 16, 3, 5, 14],
         backgroundColor: "#4895ef",
-        borderWidth:2,
-        borderColor: '#4895ef',
+        borderWidth: 2,
+        borderColor: "#4895ef",
       },
       {
         label: "เสื่อมคุณภาพ(ไม่จำเป็นต้องใช้ในราชการ)",
         data: [6, 4, 7, 8, 15],
         backgroundColor: "#dd2d4a",
-        borderWidth:2,
-        borderColor: '#dd2d4a',
+        borderWidth: 2,
+        borderColor: "#dd2d4a",
       },
       {
         label: "จำหน่ายออกจากบัญชี",
         data: [12, 13, 4, 18, 19],
         backgroundColor: "#c77dff",
-        borderWidth:2,
-        borderColor: '#c77dff',
+        borderWidth: 2,
+        borderColor: "#c77dff",
       },
     ],
   };

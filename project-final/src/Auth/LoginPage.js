@@ -26,7 +26,7 @@ function LoginPage() {
                 localStorage.setItem("user_id",res.data.user_id)
                 localStorage.setItem("main_aid",res.data.main_aid)
                 localStorage.setItem("token",res.data.token)
-                  navigate("/dashboard");
+                navigate("/dashboard");
             })
         }
         // alert(JSON.stringify(res.data))
