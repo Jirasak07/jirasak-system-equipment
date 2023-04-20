@@ -33,7 +33,7 @@ function Product() {
     axios.post("http://localhost:4444/product",{
       main_aid:main_aid
     }).then((res) => {
-      console.log(res.data);
+      console.log("data product"+res.data);
       const dMap = res.data;
       setData({
         columns: [

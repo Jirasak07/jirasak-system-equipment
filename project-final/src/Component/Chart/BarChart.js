@@ -21,6 +21,10 @@ ChartJS.register(
 );
 
 function BarChart() {
+  const [fisiyear, setFisiYear] = useState(0);
+  const date = new Date();
+  const month = new Date(date).getMonth() + 1;
+  const currentYear = new Date(date).getFullYear();
   const [lb, setLb] = useState([]);
   const labels = [
     "งานเลขาณุการ",
@@ -38,7 +42,7 @@ function BarChart() {
       },
       title: {
         display: true,
-        text: "ครุภัณฑ์แยกตามหน่วยงาน",
+        text: "ครุภัณฑ์แยกตามหน่วยงาน ประจำปีงบประมาณ "+fisiyear,
       },
       scales: {
         y: {
@@ -49,33 +53,41 @@ function BarChart() {
   };
   const main_aid = localStorage.getItem("main_aid");
   const [countsub, setCountSub] = useState();
-  const normal = [];
   const [datas, setDatas] = useState();
+  const [dataArray, setDataArray] = useState([]);
   useEffect(() => {
-    console.log("use BarChart")
-    axios
-      .post("http://localhost:4444/countsub", {
+    console.log("use BarChart");
+    axios.post("http://localhost:4444/countsub", {
         main_aid: main_aid,
       })
       .then((res) => {
         setCountSub(res.data[0].sub);
       });
-    for (let i = 1; i <= countsub; i++) {
-      axios
-        .post("http://localhost:4444/barchart", {
-          pstatus_id: 1,
-          sub_aid: i,
-        })
-        .then((res) => {
-          normal.push(res.data[0].data);
-        });
-      setDatas(normal);
-    }
+    // for (let i = 1; i <= countsub; i++) {
+    //   axios
+    //     .post("http://localhost:4444/barchart", {
+    //       pstatus_id: 1,
+    //       sub_aid: i,
+    //     })
+    //     .then((res) => {
+    //       normal.push(res.data[0].data);
+    //     });
+    //   setDatas(normal);
+    // }
     return () => {
-      console.log("out Barchart")
+      console.log("out Barchart");
     };
   }, []);
-
+  useEffect(()=>{
+    if (month >= 10) {
+      setFisiYear(currentYear + 544);
+    } else {
+      setFisiYear(currentYear + 543);
+    }
+    console.log("count2 : "+countsub)
+    
+  })
+  
   const data = {
     labels,
     datasets: [

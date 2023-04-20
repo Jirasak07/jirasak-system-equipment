@@ -10,32 +10,55 @@ import axios from "axios";
 function Dashboard() {
   const [canchk, setCanChk] = useState(null);
   const [checked, setChecked] = useState(null);
+  const [dataUse, setDataUse] = useState([]);
+  const [dataChk, setDataChk] = useState();
   const [wait, setWait] = useState(null);
   const date = new Date();
   const month = new Date(date).getMonth() + 1;
   const currentYear = new Date(date).getFullYear();
   const [fisiyear, setFisiYear] = useState(null);
   useEffect(() => {
+    const use = [];
+
+    const main = localStorage.getItem("main_aid");
     if (month >= 10) {
       setFisiYear(currentYear + 544);
     } else {
       setFisiYear(currentYear + 543);
     }
-    axios.get("http://localhost:4444/can-check").then((res) => {
-      setCanChk(res.data[0].cancheck);
-    });
-
     axios
-      .post("http://localhost:4444/checked", {
-        year: fisiyear,
+      .post("http://localhost:4444/use", {
+        main_aid: main,
       })
       .then((res) => {
-        setChecked(res.data[0].checked);
-        setWait(canchk-res.data[0].checked);
+        setDataUse(res.data);
       });
     return () => {
       console.log("unmouth");
     };
+  }, []);
+  const fetchChk = ()=>{
+    axios
+    .post("http://localhost:4444/checked", {
+      year: fisiyear,
+    })
+    .then((res) => {
+      setChecked(res.data[0].checked);
+    });
+     var qty = 0;
+     console.log(dataChk)
+      console.log(dataUse);
+      dataUse.forEach((item, index) => {
+        if (item.status != 3 && item.status != 5) {
+          qty = qty + item.qty;
+        }
+        console.log(qty);
+        setCanChk(qty);
+      });
+  }
+  useEffect(() => {
+    fetchChk()
+    setWait(canchk-checked)
   });
   return (
     <div className="px-md-5 px-0  py-4 ">
