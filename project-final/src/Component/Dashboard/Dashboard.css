@@ -8,7 +8,7 @@
   flex-direction: row;
 }
 .card-text{
-  font-size: 26px;
+  font-size: 24px;
 }
 .text-card{
   display: flex;
@@ -23,7 +23,7 @@
   width: 100%;
 }
 .resualt{
-  font-size: 5rem;
+  font-size: 4rem;
   line-height: 0;
   font-weight: 500 !important;
 }
@@ -46,9 +46,13 @@
 .numinf {
   font-size: 4rem;
 }
-.box-all {
+.box-all-use {
   background-color: #bde0fe;
   color: #1183bd;
+}
+.box-all {
+  background-color: #3C486B60;
+  color: #313552;
 }
 .box-check {
   background-color: #c1fba4;
