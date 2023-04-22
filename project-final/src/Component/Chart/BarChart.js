@@ -31,6 +31,11 @@ function BarChart() {
   const [countsub, setCountSub] = useState();
   const [datas, setDatas] = useState();
   const [dataArray, setDataArray] = useState([]);
+  const [agen1,setAgen1]= useState(0)
+  const [agen2,setAgen2]= useState(0)
+  const [agen3,setAgen3]= useState(0)
+  const [agen4,setAgen4]= useState(0)
+  const [agen5,setAgen5]= useState(0)
   var f = []
   var l = [2,5,3,5,4]
   useEffect(() => {
@@ -54,26 +59,37 @@ function BarChart() {
     };
   }, []);
   useEffect(() => {
-    for(let i=1;i<=countsub;i++){
-      dataArray.forEach((item,index)=>{
-        if(item.sub == 1){
-          f.push(item.qty)
-        }
-     
-      })
-      console.log(f)
-    }
+     dataArray.forEach((item,index)=>{
+      if(item.sub == 1){
+        setAgen1(item.qty)
+      }
+      else if (item.sub == 2){
+        setAgen2(item.qty)
+      }
+      else if (item.sub == 3){
+        setAgen3(item.qty)
+      }
+      else if (item.sub == 4){
+        setAgen4(item.qty)
+      }
+      else if (item.sub == 5){
+        setAgen5(item.qty)
+      }
+      })  
   });
+  
   
   const options = {
     responsive: true,
+    indexAxis: 'y',
     plugins: {
       legend: {
-        position: 'top',
+        position: 'left',
+        display:false,
       },
       title: {
         display: true,
-        text: 'จำนวนครุภัณฑ์แยกตามหน่วยงาน',
+        text: 'จำนวนครุภัณฑ์ใช้งานแยกตามหน่วยงาน',
       },
     },
   };
@@ -88,7 +104,7 @@ function BarChart() {
     labels: labels,
     datasets: [{
       label:'',
-      data: [65, 59, 80, 81, 56, 55, 40],
+      data: [agen1, agen2, agen3, agen4, agen5],
       backgroundColor: [
         '#3C486B',
         '#F9DBBB',
@@ -98,10 +114,10 @@ function BarChart() {
         '#210062',
         '#F5E9CF'
       ],
-      borderWidth: 1
+      borderWidth: 1,
     }]
   };
-  return <Bar  data={data} className="chartBar" options={options} />;
+  return <Bar  data={data}  options={options} />;
 }
 
 export default BarChart;

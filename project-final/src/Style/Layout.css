@@ -2,7 +2,7 @@
   max-height: 100vh;
 }
 .container-layout {
-  min-height: 100vh;
+  height: 100vh;
 }
 .sidebar {
   width: 250px;
@@ -151,4 +151,17 @@
     left: 0;
     transition: 0.5s;
   }
+}
+.button-logout{
+  background-color: #e63946;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.button-logout:hover{
+  background-color: #ff0000;
 }

@@ -3,7 +3,7 @@
 
 }
 .card-info {
-  border-radius: 15px;
+  border-radius: 5px;
   display: flex;
   flex-direction: row;
 }
@@ -47,20 +47,28 @@
   font-size: 4rem;
 }
 .box-all-use {
-  background-color: #bde0fe;
+  /* background-color: #bde0fe; */
   color: #1183bd;
+  border-color: #1183bd;
+  border-left: 0.3rem solid;
 }
 .box-all {
   background-color: #3C486B60;
   color: #313552;
+  border-color: #313552;
+  border-left: 0.3rem solid;
 }
 .box-check {
   background-color: #c1fba4;
   color: #5cc527;
+  border-color: #5cc527;
+  border-left: 0.3rem solid;
 }
 .box-wait {
   background-color: #fff6cc;
   color: #dabf42;
+  border-color: #dabf42;
+  border-left: 0.3rem solid;
 }
 .mdb-dataTable-head {
   color: #5a189a;

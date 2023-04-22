@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import imgLogo from "../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import "./login.css";
 
 function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [pass, setPass] = useState("");
+  const [loading, setLoading] = useState(false);
   const onSubmit = () => {
     axios
       .post("http://localhost:4444/login", {
@@ -17,23 +19,37 @@ function LoginPage() {
         password: pass,
       })
       .then((res) => {
-        console.table(res.data)
-        if(res.data.status === "ok" ){
-            Swal.fire({
-                icon:"success",
-                title:"ยินดีต้อนรับเข้าสู่ระบบ"
-            }).then((val) =>{
-                localStorage.setItem("user_id",res.data.user_id)
-                localStorage.setItem("main_aid",res.data.main_aid)
-                localStorage.setItem("token",res.data.token)
-                navigate("/dashboard");
-            })
+        console.table(res.data);
+        if (res.data.status === "ok") {
+          Swal.fire({
+            icon: "success",
+            title: "ยินดีต้อนรับเข้าสู่ระบบ",
+            timer: 900,
+            showConfirmButton: false,
+            timerProgressBar: true,
+          }).then((val) => {
+            localStorage.setItem("user_id", res.data.user_id);
+            localStorage.setItem("main_aid", res.data.main_aid);
+            localStorage.setItem("token", res.data.token);
+            setLoading(true);
+            setTimeout(() => {
+              setLoading(false);
+              navigate("/dashboard");
+            }, 2000);
+          });
         }
         // alert(JSON.stringify(res.data))
-       
       });
   };
-  return (
+  return loading ? (
+   <div className=" d-flex ld ">
+    <div class="spinner">
+</div>
+   </div>
+
+
+ 
+  ) : (
     <div
       className="container d-flex align-items-center justify-content-center"
       style={{ width: "100vw", height: "100vh" }}

@@ -13,8 +13,15 @@ import Update from "./Component/ManageProduct/Update";
 import EditPD from "./Component/Product/EditPD";
 import Product from "./Component/Product/Product";
 import Report from "./Component/Report/Report";
+import { useEffect } from "react";
 
 function App() {
+ useEffect(() => {
+  console.log("wellcom !!")
+  return () => {
+ console.log("Good Bye :)")   
+  };
+ }, [])
   return (
     <div className="App">
       <Routes>
@@ -30,7 +37,7 @@ function App() {
           <Route path="/manage-ag" element={<ManageAgen/>} />
           <Route path="/report" element={<Report/>} />
         </Route>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />}  />
       </Routes>
     </div>
   );

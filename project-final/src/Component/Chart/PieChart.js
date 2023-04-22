@@ -86,7 +86,7 @@ function PieChart() {
     return () => {};
   });
 
-  return <Pie data={data} options={options} className="pieBar" />;
+  return <Pie data={data} options={options} style={{with:250,height:350}} />;
 }
 
 export default PieChart;

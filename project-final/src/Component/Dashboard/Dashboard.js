@@ -14,11 +14,12 @@ function Dashboard() {
   const [dataUse, setDataUse] = useState([]);
   const [dataChk, setDataChk] = useState();
   const [wait, setWait] = useState(null);
+  const [allitems, setAllItems] = useState();
   const date = new Date();
   const month = new Date(date).getMonth() + 1;
   const currentYear = new Date(date).getFullYear();
   const [fisiyear, setFisiYear] = useState(null);
-  const [dataTest,setDataTest] = useState([])
+  const [dataTest, setDataTest] = useState([]);
   useEffect(() => {
     const use = [];
     const main = localStorage.getItem("main_aid");
@@ -34,55 +35,61 @@ function Dashboard() {
       .then((res) => {
         setDataUse(res.data);
       });
+    axios
+      .post("http://localhost:4444/allitem", {
+        main_aid: main,
+      })
+      .then((res) => {
+        setAllItems(res.data[0].allqty);
+      });
     return () => {
       console.log("unmouth");
     };
   }, []);
-  const fetchChk = ()=>{
+  const fetchChk = () => {
     axios
-    .post("http://localhost:4444/checked", {
-      year: fisiyear,
-    })
-    .then((res) => {
-      setChecked(res.data[0].checked);
-    });
-     var qty = 0;
-     console.log(dataChk)
-      console.log(dataUse);
-      dataUse.forEach((item, index) => {
-        if (item.status != 3 && item.status != 5) {
-          qty = qty + item.qty;
-        }
-        console.log(qty);
-        setCanChk(qty);
+      .post("http://localhost:4444/checked", {
+        year: fisiyear,
+      })
+      .then((res) => {
+        setChecked(res.data[0].checked);
       });
-  }
+    var qty = 0;
+    console.log(allitems);
+    dataUse.forEach((item, index) => {
+      if (item.status != 3 && item.status != 5) {
+        qty = qty + item.qty;
+      }
+      console.log(qty);
+      setCanChk(qty);
+    });
+  };
   useEffect(() => {
-    fetchChk()
-    setWait(canchk-checked)
+    fetchChk();
+    setWait(canchk - checked);
   });
   return (
-    <div className="px-md-5 px-0  py-4 ">
+    <div className="px-md-5 ">
       <div
-        className=" bg-white d-flex flex-xl-row flex-column  py-3 px-3  text-inf justify-content-around "
+        className="d-flex row   py-3 px-3  text-inf justify-content-around "
         style={{ borderRadius: 15 }}
       >
-        <div className="col-xl-3 col-lg-12 col-md-12 col-12 py-2   card-data">
-          <div className="box-all   h-100 p-4 card-info ">
+        <div className="col-12 col-xl-6 pb-3   card-data">
+          <div className="box-all bg-white   h-100 p-4 card-info ">
             <div className="col-4 icon-card  ">
               <AiFillDatabase />
             </div>
             <div className="col-8 text-card  ">
               <div className="card-text">ครุภัณฑ์ทั้งหมด</div>
               <div className="text-incard">
-                <div className=" resualt ">{canchk}</div>
+                <div className=" resualt ">{allitems}</div>
                 <div>หน่วย</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-lg-12 col-md-12 col-12 py-2   card-data">
-          <div className="box-all-use   h-100 p-4 card-info ">
+        <div className="col-12 col-xl-6 pb-3   card-data">
+          <div className="box-all-use bg-white    h-100 p-4 card-info ">
             <div className="col-4 icon-card  ">
               <AiFillDatabase />
             </div>
@@ -95,8 +102,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-lg-12 col-md-12 col-12 py-2  card-data">
-          <div className="box-check   h-100 p-4 card-info ">
+        <div className="col-12 col-xl-6 pb-3  card-data">
+          <div className="box-check bg-white    h-100 p-4 card-info ">
             <div className="col-4 icon-card  ">
               <GoChecklist />
             </div>
@@ -109,8 +116,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-lg-12 col-md-12 col-12 py-2 card-data">
-          <div className="box-wait   h-100 p-4 card-info ">
+        <div className="col-12 col-xl-6 pb-3 card-data">
+          <div className="box-wait bg-white   h-100 p-4 card-info ">
             <div className="col-4 icon-card  ">
               <ImClock2 />
             </div>
@@ -124,27 +131,15 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="pt-4 ">
-        <div
-          className="d-flex flex-xl-row flex-column"
-          style={{ borderRadius: 15,gap:20 }}
-        >
-          {/* <div className="col-12 col-xl-8" style={{ overflow: "auto" }}>
-            <div className=" p-4" style={{ height: 450, width: 850 }}>
-              <BarChart />
-            </div>
-          </div> */}
-          <div className=" col-12 col-xl-4 bg-white  " style={{ borderRadius: 15 }}>
-            <div className="p-4">
-              <PieChart />
-            </div>
-          </div>
-          <div className="bg-white col" style={{ borderRadius: 15 }} >
-          <div className=" p-4" style={{ height: 450, width: 850 }}>
-              <BarChart />
-            </div>
-          </div>
-        </div>
+      <div className="px-4">  
+      <div className="d-flex row bg-white justify-content-center" style={{borderRadius:15}} >
+        <div className="col-12 col-lg-4" style={{maxWidth:450,maxHeight:450}}  >  <PieChart/>    </div>
+        <div className="col-12 col-lg-8" style={{minWidth:350,minHeight:250}} >  <BarChart /></div>
+
+    
+      </div>
+    
+    
       </div>
     </div>
   );

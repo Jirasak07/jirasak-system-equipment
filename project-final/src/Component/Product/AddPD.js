@@ -14,22 +14,24 @@ function AddPD({ closeAdd }) {
   const [pstatus, setPstatus] = useState(1);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewSource, setPreviewSource] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
-  const main_aid = localStorage.getItem("main_aid")
+  const main_aid = localStorage.getItem("main_aid");
   useEffect(() => {
     axios.get("http://localhost:4444/product-type").then((res) => {
       setValueType(res.data);
     });
-    axios.post("http://localhost:4444/subagen",{
-      main_aid:main_aid
-    }).then((res) => {
-      setValueAgen(res.data);
-    });
+    axios
+      .post("http://localhost:4444/subagen", {
+        main_aid: main_aid,
+      })
+      .then((res) => {
+        setValueAgen(res.data);
+      });
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setValuePstatus(res.data);
     });
@@ -37,6 +39,33 @@ function AddPD({ closeAdd }) {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
   const [typename, setTypeName] = useState("");
+  const [buydate, setBuyDate] = useState(1);
+  const [buymonth, setBuyMonth] = useState(1);
+  const [pickdate, setPickDate] = useState(1);
+  const [pickmonth, setPickMonth] = useState(1);
+
+  const date = [];
+  const [ddate, setDdate] = useState([]);
+  const [monthh, setMonthh] = useState([]);
+  const [yearr, setYearr] = useState([]);
+  const month = [
+    { name: "มกราคม" },
+    { name: "กุมภาพันธ์" },
+    { name: "มีนาคม" },
+    { name: "เมษายน" },
+    { name: "พฤษภาคม" },
+    { name: "มิถุนายน" },
+    { name: "กรกฎาคม" },
+    { name: "สิงหาคม" },
+    { name: "กันยายน" },
+    { name: "ตุลาคม" },
+    { name: "พฤศจิกายน" },
+    { name: "ธันวาคม" },
+  ];
+  const year = [];
+  const thisyear = new Date().getUTCFullYear() + 543;
+  const [buyyear, setBuyYear] = useState(thisyear);
+  const [pickyear, setPickYear] = useState(thisyear);
   const onImageChange = (e) => {
     setImages([...e.target.files]);
     setFile(e.target.files[0]);
@@ -53,13 +82,12 @@ function AddPD({ closeAdd }) {
       setPreviewSource(reader.result);
     };
   };
+
   const onSubmit = (event) => {
     const user_id = localStorage.getItem("user_id");
-    var day1 = String(event.buydate).split("/");
-    var buy1 = day1[1] + "/" + day1[0] + "/" + day1[2];
+    var buy1 = buymonth + "/" + buydate + "/" + buyyear;
     const buydatee = format(new Date(buy1), "yyyy-MM-dd");
-    var day2 = String(event.pickdate).split("/");
-    var pick = day2[1] + "/" + day2[0] + "/" + day2[2];
+    var pick = pickmonth+ "/" + pickdate + "/" + pickyear;
     const pickk = format(new Date(pick), "yyyy-MM-dd");
     axios
       .post("http://localhost:4444/add-product", {
@@ -81,7 +109,7 @@ function AddPD({ closeAdd }) {
         if (res.data.status === "success") {
           const url = "http://localhost:4444/upload";
           const formData = new FormData();
-          formData.append("photo", file, event.pid +"main" + typename);
+          formData.append("photo", file, event.pid + "main" + typename);
           axios.post(url, formData).then((response) => {
             if (response.data.status === "success") {
             }
@@ -102,7 +130,7 @@ function AddPD({ closeAdd }) {
               sub_aid: subagen,
               userid: user_id,
               pstatus_id: pstatus,
-              imageupdate: event.pid +"main"+ typename,
+              imageupdate: event.pid + "main" + typename,
               update_detail: "fist add data",
             })
             .then((res) => {
@@ -111,18 +139,33 @@ function AddPD({ closeAdd }) {
                 text: "เพิ่มครุภัณฑ์หมายเลข" + event.pid + "เสร็จสิ้น",
                 timer: 1500,
               }).then((val) => {
-                navigate("/product")
-                window.location.reload()
+                navigate("/product");
+                window.location.reload();
               });
             });
         } else if (res.data.status === "error") {
           Swal.fire({
-            icon:'error',
-            text:'มีครุภัณฑ์หมายเลข'+event.pid+"อยู่ในระบบแล้ว",
-            timer:2000
-          })
+            icon: "error",
+            text: "มีครุภัณฑ์หมายเลข" + event.pid + "อยู่ในระบบแล้ว",
+            timer: 2000,
+          });
         }
       });
+  };
+  useEffect(() => {
+    for (let i = 1; i <= 31; i++) {
+      date.push({ date: i, datename: i.toString() });
+    }
+    for (let i = 0; i <= 40; i++) {
+      year.push({ ind: i, yname: (thisyear - i).toString() });
+    }
+    setDdate(date);
+    setMonthh(month);
+    setYearr(year);
+  }, []);
+  const mm = (e) => {
+    setBuyMonth(e.target.value);
+    console.log(e.target.value);
   };
   return (
     <>
@@ -134,7 +177,6 @@ function AddPD({ closeAdd }) {
                 inputHeight={40}
                 label="หมายเลขครุภัณฑ์"
                 placeholder="KPRU..."
-              
                 {...register("pid", {
                   required: {
                     value: true,
@@ -270,7 +312,8 @@ function AddPD({ closeAdd }) {
             <div className="col-6">
               <TextInputField
                 inputHeight={40}
-                label="ผู้ขาย"
+                label="ผู้ขาย "
+                hint="ไม่มีให้ใส่ -"
                 placeholder="บริษัท.."
                 {...register("seller", {
                   required: {
@@ -290,6 +333,7 @@ function AddPD({ closeAdd }) {
               <TextInputField
                 inputHeight={40}
                 label="ที่มาครุภัณฑ์"
+                hint="ไม่มีให้ใส่ -"
                 placeholder="ตกลงราค.."
                 {...register("ac", {
                   required: {
@@ -305,6 +349,7 @@ function AddPD({ closeAdd }) {
               <TextInputField
                 inputHeight={40}
                 label="ปีงบประมาณ"
+                hint="ไม่มีให้ใส่ -"
                 placeholder="2560.."
                 {...register("fisicalyear", {
                   required: {
@@ -328,49 +373,86 @@ function AddPD({ closeAdd }) {
             </div>
           </div>
           <div className="d-flex flex-row">
-            <div className="col-6">
-              <TextInputField
+            <div className="col-6 d-flex flex-row" style={{ gap: 5 }}>
+              <SelectField
+                value={buydate || ""}
+                onChange={(event) => setBuyDate(event.target.value)}
+                label="วัน"
                 inputHeight={40}
-                label="วันเดือนปีที่ซื้อ"
-                placeholder="วว/ดด/ปปปป"
-                {...register("buydate", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกข้อมูล",
-                  },
-                  pattern: {
-                    value:
-                      /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/,
-                    message: "กรุณาป้อนข้อมูลให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.buydate}
-                validationMessage={
-                  errors?.buydate ? errors.buydate.message : null
-                }
-              />
+              >
+                {ddate.map((option, index) => (
+                  <option key={index} value={option.date}>
+                    {option.datename}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={buymonth || ""}
+                onChange={(event) => setBuyMonth(event.target.value)}
+                label="เดือน"
+                inputHeight={40}
+              >
+                {monthh.map((option, index) => (
+                  <option key={index} value={index + 1}>
+                    {option.name}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={buyyear}
+                onChange={(e) => {
+                  setBuyYear(e.target.value);
+                }}
+                label="ปีที่ซื้อ"
+                inputHeight={40}
+              >
+                {yearr.map((option, index) => (
+                  <option key={index} value={option.yname}>
+                    {option.yname}
+                  </option>
+                ))}
+              </SelectField>
             </div>
-            <div className="col-6">
-              <TextInputField
+            {/* /////////////////////////////////////////////////////////////// */}
+            <div className="col-6 d-flex flex-row" style={{ gap: 5 }}>
+              <SelectField
+                value={pickdate}
+                onChange={(e) => {
+                  setPickDate(e.target.value);
+                }}
+                label="วัน"
                 inputHeight={40}
-                label="วันเดือนปีที่รับ"
-                placeholder="วว/ดด/ปปปป"
-                {...register("pickdate", {
-                  required: {
-                    value: true,
-                    message: "กรุณากรอกข้อมูล",
-                  },
-                  pattern: {
-                    value:
-                      /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/,
-                    message: "กรุณาป้อนข้อมูลให้ถูกต้อง",
-                  },
-                })}
-                isInvalid={!!errors.pickdate}
-                validationMessage={
-                  errors?.pickdate ? errors.pickdate.message : null
-                }
-              />
+              >
+                {ddate.map((option, index) => (
+                  <option key={index} value={option.date}>
+                    {option.datename}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={pickmonth}
+                onChange={(e) => {
+                  setPickMonth(e.target.value);
+                }}
+                label="เดือน"
+                inputHeight={40}
+              >
+                {monthh.map((option, index) => (
+                  <option key={index} value={index+1}>
+                    {option.name}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+              value={pickyear}
+              onChange={(e)=>{setPickYear(e.target.value)}}
+              label="ปีที่รับ" inputHeight={40}>
+                {yearr.map((option, index) => (
+                  <option key={index} value={option.yname}>
+                    {option.yname}
+                  </option>
+                ))}
+              </SelectField>
             </div>
           </div>
           <div className="d-flex flex-row">
@@ -429,6 +511,9 @@ function AddPD({ closeAdd }) {
             <Button appearance="primary" intent="success" type="submit">
               บันทึก
             </Button>
+            <div className="btn-danger btn" onClick={test}>
+              เทส
+            </div>
             <Button
               appearance="primary"
               intent="danger"

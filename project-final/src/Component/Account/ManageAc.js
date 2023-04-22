@@ -173,7 +173,7 @@ function ManageAc() {
       </div>
 
       <div className="bg-white card p-3 mt-2">
-        <MDBDataTable data={users} />
+        <MDBDataTable data={users} responsive />
       </div>
       <Dialog
         className="dialog "

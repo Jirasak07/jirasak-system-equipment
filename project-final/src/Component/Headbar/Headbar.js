@@ -5,51 +5,79 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaListUl, FaCoins, FaUserCircle } from "react-icons/fa";
 import { MdDashboard, MdManageAccounts, MdOutlineLogout } from "react-icons/md";
 import imgLogo from "../../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
-import {HiTable} from 'react-icons/hi'
+import { HiTable } from "react-icons/hi";
 import { NavLink, useNavigate } from "react-router-dom";
 import { BiQrScan } from "react-icons/bi";
 import { CgFileDocument } from "react-icons/cg";
+import { FaPowerOff } from "react-icons/fa";
 import {
   HiOutlineDocumentSearch,
   HiOutlineDocumentDownload,
 } from "react-icons/hi";
+import { useEffect } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Headbar() {
   const [isShow, setIsShow] = useState(false);
   const [isDown, setIsDown] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [username, setUsername] = useState("name");
   const navigate = useNavigate();
+  const user_id = localStorage.getItem("user_id");
   const manage = () => {
     setIsActive(true);
     navigate("/check");
   };
+  const navLink=()=>{
+    setIsActive(false)
+    setIsShow(false)
+  }
   const Logout = () => {
-    localStorage.removeItem("main_aid");
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("token");
-    navigate("/login");
+    Swal.fire({
+      icon: "info",
+      timer:500,
+      text:'กำลังออกจากระบบ',
+      showConfirmButton:false,
+      timerProgressBar:true
+    }).then((res) => {
+      localStorage.removeItem("main_aid");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("token");
+      navigate("/login");
+    });
   };
+  useEffect(() => {
+    axios
+      .post("http://localhost:4444/username", {
+        user_id: user_id,
+      })
+      .then((res) => {
+        setUsername(res.data[0].name);
+      });
+  });
+  const home = () =>{
+    navigate("/dashboard")
+    setIsShow(false)
+  }
   return (
     <>
-      <div className="d-flex d-md-none headbar p-2 ">
-        <div className="col-2 align-items-center d-flex">
+      <div
+        className="d-flex  d-md-none  p-3  text-white"
+        style={{ backgroundColor: "#1d3557" }}
+      >
+        <div className="col-3 align-items-center d-flex">
           <GiHamburgerMenu
             style={{ fontSize: 25 }}
             onClick={() => setIsShow(!isShow)}
           />
         </div>
-        <div className="col-7 d-flex justify-content-center align-items-center head-title " style={{fontSize:14}}>
-          ระบบตรวจสอบครุภัณฑ์
+        <div onClick={home} className="col-7  d-flex justify-content-center align-items-center pr-5">
+          <div style={{ fontSize: 16 }}>{username}</div>
         </div>
-        <div className="col-3  d-flex justify-content-end align-items-center pr-5 menu">
-          <FaUserCircle
-            className="user-pic"
-            onClick={() => setIsDown(!isDown)}
-          />
-          <div className={isDown ? "down actived " : "down "}>
-            <div style={{ fontSize: 20 }}>จิรศักดิ์ สิงหบุตร</div>
-            <div className="line2"></div>
-            <div className="logout ">ออกจากระบบ</div>
+        <div className="col-2">
+          <div className="button-logout" onClick={Logout}>
+            <FaPowerOff />
           </div>
         </div>
       </div>
@@ -66,7 +94,7 @@ function Headbar() {
           className="menuBar d-block d-md-none"
         />
         <div className="d-flex flex-column h-100 ">
-          <div className="head-side d-flex flex-column justify-content-between align-items-center ">
+          <div onClick={home} className="head-side d-flex flex-column justify-content-between align-items-center ">
             <img src={imgLogo} className="img-logonav" />
             <div className="mt-3" style={{ fontSize: 20 }}>
               ระบบตรวจสอบครุภัณฑ์
@@ -78,17 +106,18 @@ function Headbar() {
               to="/dashboard"
               activeClassName="active"
               className="navlink"
+              onClick={() => navLink() }
             >
               <MdDashboard /> Dashboard
             </NavLink>
-            <NavLink to="/product" className="navlink" activeClassName="active">
+            <NavLink to="/product" className="navlink" activeClassName="active"    onClick={() => navLink() }>
               <FaListUl /> ครุภัณฑ์ทั้งหมด
             </NavLink>
             <NavLink
               to="/scan"
               className="navlink"
               activeClassName="active"
-              onClick={() => setIsActive(false)}
+              onClick={() => navLink() }
             >
               <BiQrScan /> สแกน QR Code
             </NavLink>
@@ -96,7 +125,7 @@ function Headbar() {
               to="/manage-ac"
               className="navlink"
               activeClassName="active"
-              onClick={() => setIsActive(false)}
+              onClick={() => navLink() }
             >
               <MdManageAccounts />
               จัดการผู้ใช้งาน
@@ -105,7 +134,7 @@ function Headbar() {
               to="/manage-ag"
               className="navlink"
               activeClassName="active"
-              onClick={() => setIsActive(false)}
+              onClick={() => navLink() }
             >
               <HiTable />
               จัดการหน่วยงาน
@@ -114,7 +143,7 @@ function Headbar() {
               to="/report"
               className="navlink"
               activeClassName="active"
-              onClick={() => setIsActive(false)}
+              onClick={() => navLink() }
             >
               <CgFileDocument /> ออกรายงาน
             </NavLink>

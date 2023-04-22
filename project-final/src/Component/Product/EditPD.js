@@ -8,6 +8,7 @@ import noIMG from "../../assets/no-photo-available.png";
 import Swal from "sweetalert2";
 function EditPD() {
   const { id } = useParams();
+  const main_aid = localStorage.getItem("main_aid")
   const navigate = useNavigate();
   const [valueType, setValueType] = useState([]);
   const [ptype, setPtype] = useState(1);
@@ -25,8 +26,35 @@ function EditPD() {
   const [seller, setSeller] = useState();
   const [ac, setAc] = useState();
   const [fisicalyear, setFisicalyear] = useState();
-  const [buydate, setBuydate] = useState();
-  const [pickdate, setPickdate] = useState();
+  const [buydateOld, setBuydateOld] = useState();
+  const [pickdateOld, setPickdateOld] = useState();
+  const [buydate, setBuyDate] = useState(1);
+  const [buymonth, setBuyMonth] = useState(1);
+  const [pickdate, setPickDate] = useState(1);
+  const [pickmonth, setPickMonth] = useState(1);
+
+  const date = [];
+  const [ddate, setDdate] = useState([]);
+  const [monthh, setMonthh] = useState([]);
+  const [yearr, setYearr] = useState([]);
+  const month = [
+    { name: "มกราคม" },
+    { name: "กุมภาพันธ์" },
+    { name: "มีนาคม" },
+    { name: "เมษายน" },
+    { name: "พฤษภาคม" },
+    { name: "มิถุนายน" },
+    { name: "กรกฎาคม" },
+    { name: "สิงหาคม" },
+    { name: "กันยายน" },
+    { name: "ตุลาคม" },
+    { name: "พฤศจิกายน" },
+    { name: "ธันวาคม" },
+  ];
+  const year = [];
+  const thisyear = new Date().getUTCFullYear() + 543;
+  const [buyyear, setBuyYear] = useState(thisyear);
+  const [pickyear, setPickYear] = useState(thisyear);
   const [img, setImg] = useState();
   const [callImg, setCallImg] = useState();
   const [pid, setPid] = useState();
@@ -57,11 +85,9 @@ function EditPD() {
   };
   const onSubmit = (e) => {
     const user_id = localStorage.getItem("user_id");
-    var day1 = String(buydate).split("/");
-    var buy1 = day1[1] + "/" + day1[0] + "/" + day1[2];
+    var buy1 = buymonth + "/" + buydate + "/" + buyyear;
     const buydatee = format(new Date(buy1), "yyyy-MM-dd");
-    var day2 = String(pickdate).split("/");
-    var pick = day2[1] + "/" + day2[0] + "/" + day2[2];
+    var pick = pickmonth+ "/" + pickdate + "/" + pickyear;
     const pickk = format(new Date(pick), "yyyy-MM-dd");
     axios
       .patch("http://localhost:4444/edit-product", {
@@ -136,8 +162,8 @@ function EditPD() {
         setSeller(res.data[0].seller);
         setAc(res.data[0].acquirement);
         setFisicalyear(res.data[0].fisicalyear);
-        setBuydate(format(new Date(res.data[0].buydate), "P"));
-        setPickdate(format(new Date(res.data[0].pickdate), "P"));
+        setBuydateOld(format(new Date(res.data[0].buydate), "dd/M/yyyy"));
+        setPickdateOld(format(new Date(res.data[0].pickdate), "dd/M/yyyy"));
         setCallImg(res.data[0].image);
         setImg(res.data[0].image);
         if (res.data[0].image) {
@@ -147,15 +173,38 @@ function EditPD() {
         }
       });
     axios.get("http://localhost:4444/product-type").then((res) => {
-      console.log(res.data);
       setValueType(res.data);
     });
-    axios.get("http://localhost:4444/subagen").then((res) => {
+    axios.post("http://localhost:4444/subagen",{
+      main_aid:main_aid
+    }).then((res) => {
       setValueAgen(res.data);
     });
     axios.get("http://localhost:4444/pstatus").then((res) => {
       setValuePstatus(res.data);
     });
+  }, []);
+  useEffect(()=>{
+    const showBuy = String(buydateOld).split("/")
+    const showPick = String(pickdateOld).split("/")
+    setBuyDate(showBuy[0])
+    setBuyMonth(showBuy[1])
+    setBuyYear(showBuy[2])
+    setPickDate(showBuy[0])
+    setPickMonth(showBuy[1])
+    setPickYear(showBuy[2])
+    // console.log(buydateOld)
+  })
+  useEffect(() => {
+    for (let i = 1; i <= 31; i++) {
+      date.push({ date: i, datename: i.toString() });
+    }
+    for (let i = 0; i <= 40; i++) {
+      year.push({ ind: i, yname: (thisyear - i).toString() });
+    }
+    setDdate(date);
+    setMonthh(month);
+    setYearr(year);
   }, []);
   return (
     <>
@@ -163,7 +212,7 @@ function EditPD() {
         <div className="my-3 text-center">
           การแก้ไขข้อมูลครุภัณฑ์หมายเลข : {id}
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
+        <form  className="d-flex flex-column">
           <div className="d-flex flex-row">
             <div className="col-6">
               <TextInputField
@@ -207,6 +256,7 @@ function EditPD() {
                 defaultValue={pdetail}
                 placeholder="รายละเอียดครุภัณฑ์"
                 onChange={(e) => setPdetail(e.target.value)}
+                required={true}
               />
             </div>
           </div>
@@ -218,6 +268,7 @@ function EditPD() {
                 placeholder="1.."
                 type="number"
                 value={1}
+                required={true}
               />
             </div>
             <div className="col-3">
@@ -228,6 +279,7 @@ function EditPD() {
                 defaultValue={unit}
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
+                required={true}
               />
             </div>
             <div className="col-6">
@@ -238,6 +290,7 @@ function EditPD() {
                 defaultValue={price}
                 type="number"
                 onChange={(e) => setPrice(e.target.value)}
+                required={true}
               />
             </div>
           </div>
@@ -250,6 +303,7 @@ function EditPD() {
                 placeholder="งบประมา.."
                 defaultValue={finance}
                 onChange={(e) => setFinance(e.target.value)}
+                required={true}
               />
             </div>
             <div className="col-6">
@@ -259,6 +313,7 @@ function EditPD() {
                 placeholder="บริษัท.."
                 value={seller}
                 onChange={(e) => setSeller(e.target.value)}
+                required={true}
               />
             </div>
           </div>
@@ -270,29 +325,95 @@ function EditPD() {
                 defaultValue={ac}
                 placeholder="ตกลงราค.."
                 onChange={(e) => setAc(e.target.value)}
+                required={true}
               />
             </div>
           </div>
-          <div className="d-flex flex-row">
-            <div className="col-6">
-              <TextInputField
+          <div className="d-flex flex-column flex-lg-row">
+            <div className="col-12 col-lg-6 d-flex flex-row" style={{ gap: 5 }}>
+              <SelectField
+                value={buydate || ""}
+                onChange={(event) => setBuyDate(event.target.value)}
+                label="วัน"
                 inputHeight={40}
-                label="วันเดือนปีที่ซื้อ"
-                defaultValue={buydate}
-                placeholder="วว/ดด/ปปปป"
-                value={buydate}
-                onChange={(e) => setBuydate(e.target.value)}
-              />
+              >
+                {ddate.map((option, index) => (
+                  <option key={index} value={option.date}>
+                    {option.datename}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={buymonth || ""}
+                onChange={(event) => setBuyMonth(event.target.value)}
+                label="เดือน"
+                inputHeight={40}
+              >
+                {monthh.map((option, index) => (
+                  <option key={index} value={index + 1}>
+                    {option.name}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={buyyear}
+                onChange={(e) => {
+                  setBuyYear(e.target.value);
+                }}
+                label="ปีที่ซื้อ"
+                inputHeight={40}
+              >
+                {yearr.map((option, index) => (
+                  <option key={index} value={option.yname}>
+                    {option.yname}
+                  </option>
+                ))}
+              </SelectField>
             </div>
-            <div className="col-6">
-              <TextInputField
-                inputHeight={40}
-                label="วันเดือนปีที่รับ"
-                defaultValue={pickdate}
-                placeholder="วว/ดด/ปปปป"
+            {/* /////////////////////////////////////////////////////////////// */}
+            <div className="col-12 col-lg-6 d-flex flex-row" style={{ gap: 5 }}>
+              <SelectField
                 value={pickdate}
-                onChange={(e) => setPickdate(e.target.value)}
-              />
+                onChange={(e) => {
+                  setPickDate(e.target.value);
+                }}
+                label="วัน"
+                inputHeight={40}
+              >
+                {ddate.map((option, index) => (
+                  <option key={index} value={option.date}>
+                    {option.datename}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={pickmonth}
+                onChange={(e) => {
+                  setPickMonth(e.target.value);
+                }}
+                label="เดือน"
+                inputHeight={40}
+              >
+                {monthh.map((option, index) => (
+                  <option key={index} value={index + 1}>
+                    {option.name}
+                  </option>
+                ))}
+              </SelectField>
+              <SelectField
+                value={pickyear}
+                onChange={(e) => {
+                  setPickYear(e.target.value);
+                }}
+                label="ปีที่รับ"
+                inputHeight={40}
+              >
+                {yearr.map((option, index) => (
+                  <option key={index} value={option.yname}>
+                    {option.yname}
+                  </option>
+                ))}
+              </SelectField>
             </div>
           </div>
           <div className="d-flex flex-column">
@@ -318,7 +439,7 @@ function EditPD() {
             className="d-flex flex-row justify-content-end pb-3"
             style={{ gap: 5 }}
           >
-            <Button appearance="primary" intent="success" type="submit">
+            <Button appearance="primary" intent="success" type="submit" onClick={onSubmit}>
               บันทึก
             </Button>
           </div>
