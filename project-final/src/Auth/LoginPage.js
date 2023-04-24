@@ -37,18 +37,22 @@ function LoginPage() {
               navigate("/dashboard");
             }, 2000);
           });
+        } else if (res.data.status == "error") {
+          Swal.fire({
+            icon: "error",
+            title: "ไม่สามารถเข้าสู่ระบบได้",
+            timer: 900,
+            showConfirmButton: false,
+            timerProgressBar: true,
+          });
         }
         // alert(JSON.stringify(res.data))
       });
   };
   return loading ? (
-   <div className=" d-flex ld ">
-    <div class="spinner">
-</div>
-   </div>
-
-
- 
+    <div className=" d-flex ld ">
+      <div class="spinner"></div>
+    </div>
   ) : (
     <div
       className="container d-flex align-items-center justify-content-center"

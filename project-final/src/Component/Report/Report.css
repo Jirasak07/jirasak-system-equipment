@@ -1,0 +1,61 @@
+.report1{
+    background-color: #4895ef30 ;
+    color: #4895ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+.report1:hover{
+    background-color: #4895ef ;
+    color: white;
+    transition: 0.2s ease;
+}
+.report2:hover{
+    background-color: #ff499e ;
+    color: white;
+    transition: 0.2s ease;
+}
+.report3:hover{
+    background-color: #f3722c ;
+    color: white;
+    transition: 0.2s ease;
+}
+.report4:hover{
+    background-color: #04e762 ;
+    color: white;
+    transition: 0.2s ease;
+}
+.report2{
+    background-color: #ff499e30 ;
+    color: #ff499e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 500 !important;
+    cursor: pointer;
+}
+.report3{
+    background-color: #f3722c30 ;
+    color: #f3722c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 500 !important;
+    cursor: pointer;
+}
+.report4{
+    background-color: #04e76230 ;
+    color: #04e762;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 500 !important;
+    cursor: pointer;
+}

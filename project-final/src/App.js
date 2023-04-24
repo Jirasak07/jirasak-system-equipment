@@ -14,6 +14,10 @@ import EditPD from "./Component/Product/EditPD";
 import Product from "./Component/Product/Product";
 import Report from "./Component/Report/Report";
 import { useEffect } from "react";
+import ReportAll from "./Component/Report/ReportAll";
+import ReportAgen from "./Component/Report/ReportAgen";
+import ReportStatus from "./Component/Report/ReportStatus";
+import ReportFisicalyear from "./Component/Report/ReportFisicalyear";
 
 function App() {
  useEffect(() => {
@@ -36,6 +40,10 @@ function App() {
           <Route path="/scan/scanc" element={<QRCodeScan />} />
           <Route path="/manage-ag" element={<ManageAgen/>} />
           <Route path="/report" element={<Report/>} />
+          <Route path="/report/all" element={<ReportAll/>} />
+          <Route path="/report/agen" element={<ReportAgen/>}/>
+          <Route path="/report/status" element={<ReportStatus/>} />
+          <Route path="/report/fisicalyear" element={<ReportFisicalyear/>} />
         </Route>
         <Route path="/login" element={<LoginPage />}  />
       </Routes>

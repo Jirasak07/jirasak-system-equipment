@@ -12,12 +12,14 @@ import { th } from "date-fns/locale";
 import Swal from "sweetalert2";
 
 function Update() {
+  const main = localStorage.getItem("main_aid")
   const [pstatus, setPstatus] = useState(1);
   const [said, setSaid] = useState(1);
   const [dataPstatus, setDataPstatus] = useState([]);
   const [dataSaid, setDataSaid] = useState([]);
   const [update_detail, setUpdateDetail] = useState("-");
   const [previewSource, setPreviewSource] = useState(null);
+  const [max,setMax] = useState()
   const [img, setImg] = useState();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -28,28 +30,35 @@ function Update() {
     });
     axios
       .post("http://localhost:4444/subagen", {
-        pid: id,
+        main_aid: main,
       })
       .then((res) => {
         setDataSaid(res.data);
       });
     return () => {};
   }, []);
+  useEffect(()=>{
+     axios.get("http://localhost:4444/maxupdate").then((res)=>{
+        setMax(res.data[0].max)
+    })
+  })
   const onSaveUpdate = () => {
     const newDate = new Date();
+
+   
     axios
       .post("http://localhost:4444/save-update", {
         pid: id,
         sub_aid: said,
         user_id: user_id,
         pstatus_id: pstatus,
-        imageupdate: id +format(newDate,'dd-MMM-yyyy HH-m:s')+ typename,
+        imageupdate: max+id+typename,
         update_detail: update_detail,
       })
       .then((res) => {
         const url = "http://localhost:4444/upload";
         const formData = new FormData();
-        formData.append("photo", file, id + format(newDate,'dd-MMM-yyyy HH-m:s') + typename);
+        formData.append("photo", file, max+id+ typename);
         axios.post(url, formData).then((response) => {});
         if (res.data.status == "success") {
           Swal.fire({
@@ -86,6 +95,12 @@ function Update() {
       setPreviewSource(reader.result);
     };
   };
+  useEffect(() => {
+
+    return () => {
+      console.log("out update page")
+    };
+  }, [])
   return (
     <>
       <div className="container pt-4 d-flex flex-row justify-content-center ">
