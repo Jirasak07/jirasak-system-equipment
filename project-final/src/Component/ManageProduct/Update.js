@@ -10,6 +10,7 @@ import axios from "axios";
 import { format, addYears } from "date-fns";
 import { th } from "date-fns/locale";
 import Swal from "sweetalert2";
+import noIMG from "../../assets/no-photo-available.png";
 
 function Update() {
   const main = localStorage.getItem("main_aid")
@@ -42,10 +43,26 @@ function Update() {
         setMax(res.data[0].max)
     })
   })
+  useEffect(() => {
+    axios.post("http://localhost:4444/update-old",{
+      pid:id
+    }).then((res)=>{
+      console.log("data Update :"+res.data)
+        setSaid(res.data[0].sub_aid)
+        setPstatus(res.data[0].pstatus_id)
+        setUpdateDetail(res.data[0].update_detail)
+        if (res.data[0].imgupdate) {
+          setPreviewSource("http://localhost:4444/img/" + res.data[0].imgupdate);
+        } else {
+          setPreviewSource(noIMG);
+        }
+    })
+    return () => {
+      console.log("OUT")
+    };
+  }, [])
   const onSaveUpdate = () => {
     const newDate = new Date();
-
-   
     axios
       .post("http://localhost:4444/save-update", {
         pid: id,
@@ -76,6 +93,7 @@ function Update() {
         }
       });
   };
+
   const [images, setImages] = useState([]);
   const [file, setFile] = useState();
   const [typename, setTypeName] = useState("");
@@ -127,8 +145,8 @@ function Update() {
                 <img
                   src={previewSource}
                   alt="Preview"
-                  className="img-fluid mb-3"
-                  style={{ maxHeight: "300px" }}
+                  className="img-fluid mb-3 mt-3"
+                  style={{ maxHeight: "190px" }}
                 />
               )}
               <TextInputField

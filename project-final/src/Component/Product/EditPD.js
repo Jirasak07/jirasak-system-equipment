@@ -184,17 +184,21 @@ function EditPD() {
       setValuePstatus(res.data);
     });
   }, []);
+  const setA =()=>{
+    
+  }
   useEffect(()=>{
     const showBuy = String(buydateOld).split("/")
     const showPick = String(pickdateOld).split("/")
     setBuyDate(showBuy[0])
     setBuyMonth(showBuy[1])
     setBuyYear(showBuy[2])
-    setPickDate(showBuy[0])
-    setPickMonth(showBuy[1])
-    setPickYear(showBuy[2])
-    // console.log(buydateOld)
+    setPickDate(showPick[0])
+    setPickMonth(showPick[1])
+    setPickYear(showPick[2])
+    console.log("vv")
   })
+  
   useEffect(() => {
     for (let i = 1; i <= 31; i++) {
       date.push({ date: i, datename: i.toString() });
