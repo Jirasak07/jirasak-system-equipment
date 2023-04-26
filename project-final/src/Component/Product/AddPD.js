@@ -511,9 +511,6 @@ function AddPD({ closeAdd }) {
             <Button appearance="primary" intent="success" type="submit">
               บันทึก
             </Button>
-            <div className="btn-danger btn" onClick={test}>
-              เทส
-            </div>
             <Button
               appearance="primary"
               intent="danger"

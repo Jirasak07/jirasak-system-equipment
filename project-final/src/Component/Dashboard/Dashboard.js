@@ -7,7 +7,12 @@ import { BiTime } from "react-icons/bi";
 import BarChart from "../Chart/BarChart";
 import PieChart from "../Chart/PieChart";
 import axios from "axios";
+import { MDBBreadcrumb, MDBBreadcrumbItem } from "mdbreact";
 import { MDBDataTableV5 } from "mdbreact";
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import { NavLink } from "react-router-dom";
 function Dashboard() {
   const [canchk, setCanChk] = useState(null);
   const [checked, setChecked] = useState(null);
@@ -20,6 +25,11 @@ function Dashboard() {
   const currentYear = new Date(date).getFullYear();
   const [fisiyear, setFisiYear] = useState(null);
   const [dataTest, setDataTest] = useState([]);
+  
+  function handleClick(event) {
+    event.preventDefault();
+    console.info('You clicked a breadcrumb.');
+  }
   useEffect(() => {
     const use = [];
     const main = localStorage.getItem("main_aid");
@@ -69,9 +79,17 @@ function Dashboard() {
     setWait(canchk - checked);
   });
   return (
-    <div className="px-md-5 ">
+    <div className="container-fluid">
+       <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <NavLink underline="hover" color="inherit" to="/dashboard">
+          Home
+        </NavLink>
+        <Typography color="text.primary">Dashboard</Typography>
+      </Breadcrumbs>
+    </div>
       <div
-        className="d-flex row   py-3 px-3  text-inf justify-content-around "
+        className="d-flex row   py-3  text-inf justify-content-around "
         style={{ borderRadius: 15 }}
       >
         <div className="col-12 col-xl-6 pb-3   card-data">
@@ -131,15 +149,26 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="px-4">  
-      <div className="d-flex row bg-white justify-content-center" style={{borderRadius:15}} >
-        <div className="col-12 col-lg-4" style={{maxWidth:450,maxHeight:450}}  >  <PieChart/>    </div>
-        <div className="col-12 col-lg-8" style={{minWidth:350,minHeight:250}} >  <BarChart /></div>
-
-    
-      </div>
-    
-    
+      <div className="px-3">
+        <div
+          className="d-flex row bg-white justify-content-center"
+          style={{ borderRadius: 15 }}
+        >
+          <div
+            className="col-12 col-lg-4"
+            style={{ maxWidth: 450, maxHeight: 450 }}
+          >
+            {" "}
+            <PieChart />{" "}
+          </div>
+          <div
+            className="col-12 col-lg-8"
+            style={{ minWidth: 350, minHeight: 250 }}
+          >
+            {" "}
+            <BarChart />
+          </div>
+        </div>
       </div>
     </div>
   );

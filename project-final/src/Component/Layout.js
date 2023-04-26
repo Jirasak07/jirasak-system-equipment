@@ -3,12 +3,13 @@ import "../Style/Layout.css";
 import LogoKpru from "../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
 import { MDBCol, MDBContainer, MDBRow } from "mdbreact";
 import Headbar from "./Headbar/Headbar";
-import React, { useEffect } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MDBBreadcrumb, MDBBreadcrumbItem } from "mdbreact";
 
 const Layout = () => {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const chkLogin = () => {
     const token = localStorage.getItem("token");
     const Auth = async () => {
@@ -21,16 +22,18 @@ const Layout = () => {
           if (data.status == "ok") {
             // navigate("/dashboard")
           } else {
-            navigate("/login")
+            navigate("/login");
           }
         });
     };
     Auth().catch(console.error);
     // console.log("login")
   };
+  const [pagging, setPagging] = useState();
   useEffect(() => {
     chkLogin();
-  },[]);
+    setPagging(window.location.pathname);
+  }, []);
   return (
     <>
       <div className="container-layout d-flex flex-column flex-md-row layout ">

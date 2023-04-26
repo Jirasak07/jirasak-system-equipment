@@ -3,6 +3,9 @@ import React, { useState } from "react";
 
 function ReportAll() {
   const [SelectReport,setSelectReport] = useState()
+  const long=()=>{
+    window.open('http://localhost:83/PDF/TCPDF-main/testB.php?y=2560', '_blank', 'noreferrer');
+  }
   return (
     <div className="row">
       <div className="col-8">
@@ -12,8 +15,8 @@ function ReportAll() {
         </SelectField>
       </div>
       <div className="col-4 pt-2">
-        <Button appearance="primary" intent="success">
-          ดาวน์โหลด PDF
+        <Button appearance="primary" intent="success" onClick={long} >
+          เลือก
         </Button>
       </div>
     </div>

@@ -35,7 +35,7 @@ function App() {
           <Route path="/product/check/:id" element={<CheckPD />} />
           <Route path="/product/update/:id" element={<Update />} />
           <Route path="/scan" element={<ScanQR />} />
-          <Route path="/edit/:id" element={<EditPD />} />
+          <Route path="/product/edit/:id" element={<EditPD />} />
           <Route path="/manage-ac" element={<ManageAc />} />
           <Route path="/scan/scanc" element={<QRCodeScan />} />
           <Route path="/manage-ag" element={<ManageAgen/>} />

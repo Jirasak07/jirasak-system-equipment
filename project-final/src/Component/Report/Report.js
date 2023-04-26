@@ -9,6 +9,11 @@ import ReportAll from "./ReportAll";
 import ReportAgen from "./ReportAgen";
 import ReportFisicalyear from "./ReportFisicalyear";
 import ReportStatus from "./ReportStatus";
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Link from '@mui/material/Link';
+import {IoDocumentTextOutline} from 'react-icons/io5'
+import {FaDatabase,FaCalendarAlt,FaStream,FaSuitcase} from 'react-icons/fa'
 
 function Report() {
   const navigate = useNavigate();
@@ -29,9 +34,18 @@ function Report() {
     setIsFisical(!isFisical);
   };
   return (
-    <div className="p-3 ">
-      <div
-        className="p-5 bg-white"
+    <div className="container-fluid ">
+         <div>
+      <Breadcrumbs aria-label="breadcrumb">
+        <NavLink underline="hover" color="inherit" to="/dashboard">
+          Home
+        </NavLink>
+        <Typography color="text.primary">Reports</Typography>
+      </Breadcrumbs>
+    </div>
+    <div className="p-5" >
+       <div
+        className="p-3 mt-2 bg-white"
         style={{
           borderRadius: 10,
           maxWidth: 600,
@@ -39,7 +53,7 @@ function Report() {
           marginRight: "auto",
         }}
       >
-        <div className="text-center">รายงานการตรวจสอบครุภัณฑ์</div>
+        <div className="d-flex justify-content-center align-items-center" style={{gap:5}}><IoDocumentTextOutline style={{fontSize:22}} /> รายงานการตรวจสอบครุภัณฑ์</div>
         <div
           className="d-flex row mt-2"
           style={{ justifyContent: "space-evenly" }}
@@ -47,41 +61,43 @@ function Report() {
           <div className="p-2  col-md-6 col-12" style={{ minHeight: 100 }}>
             <div
               onClick={GoAll}
-              style={{ borderRadius: 15 }}
+              style={{ borderRadius: 15,gap:8 }}
               className=" h-100 p-2 report1 d-flex"
             >
-              ครุภัณฑ์ทั้งหมด
+           <FaDatabase/>   ครุภัณฑ์ทั้งหมด
             </div>
           </div>
           <div className="p-2  col-md-6 col-12" style={{ minHeight: 100 }}>
             <div
             onClick={GoFisical}
               className=" h-100 p-2 report2 d-flex"
-              style={{ borderRadius: 15 }}
+              style={{ borderRadius: 15,gap:8 }}
             >
-              ครุภัณฑ์ตามปีงบประมาณ
+            <FaCalendarAlt/>  ครุภัณฑ์ตามปีงบประมาณ
             </div>
           </div>
           <div className="p-2  col-md-6 col-12" style={{ minHeight: 100 }}>
             <div
              onClick={GoStatus}
               className=" h-100 p-2 report3 d-flex"
-              style={{ borderRadius: 15 }}
+              style={{ borderRadius: 15,gap:8 }}
             >
-              ครุภัณฑ์ตามสถานะ
+            <FaStream/>  ครุภัณฑ์ตามสถานะ
             </div>
           </div>
           <div className="p-2  col-md-6 col-12" style={{ minHeight: 100 }}>
             <div
             onClick={GoAgen}
               className=" h-100 p-2 report4 d-flex"
-              style={{ borderRadius: 15 }}
+              style={{ borderRadius: 15,gap:8 }}
             >
-              ครุภัณฑ์ตามหน่วยงาน
+            <FaSuitcase/>  ครุภัณฑ์ตามหน่วยงาน
             </div>
           </div>
         </div>
       </div>
+    </div>
+     
       <Pane>
         <Dialog
           isShown={isAll}

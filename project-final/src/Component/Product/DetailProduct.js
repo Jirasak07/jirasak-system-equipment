@@ -219,7 +219,7 @@ function DetailProduct({ id }) {
         <QRCode id={id} />
       </div>
       <div className="d-flex flex-row justify-content-around">
-        <NavLink className="btn col btn-warning" to={`/edit/${id}`}>
+        <NavLink className="btn col btn-warning" to={`/product/edit/${id}`}>
           แก้ไข
         </NavLink>
         <NavLink

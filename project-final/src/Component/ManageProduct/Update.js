@@ -26,7 +26,7 @@ function Update() {
   const { id } = useParams();
   const user_id = localStorage.getItem("user_id");
   useEffect(() => {
-    axios.get("http://localhost:4444/pstatus").then((res) => {
+    axios.get("http://localhost:4444/pstatus-update").then((res) => {
       setDataPstatus(res.data);
     });
     axios
@@ -172,7 +172,6 @@ function Update() {
               >
                 {dataPstatus.map((it, index) => (
                   <option key={index} value={it.pstatus_id}>
-                    {" "}
                     {it.pstatus_name}{" "}
                   </option>
                 ))}

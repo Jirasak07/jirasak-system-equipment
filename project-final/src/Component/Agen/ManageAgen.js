@@ -4,7 +4,9 @@ import axios from "axios";
 import { Button, Dialog, TextInputField } from "evergreen-ui";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { NavLink } from "react-router-dom";
 function ManageAgen() {
   const [dataSubAgen, setDataSubAgen] = useState([]);
   const main_aid = localStorage.getItem("main_aid");
@@ -96,51 +98,61 @@ function ManageAgen() {
     }
   };
   return (
-    <div className="container pt-3">
-      <div className="py-2 d-flex flex-row align-items-center justify-content-between ">
-        <div>ตารางแสดงหน่วยงานทั้งหมด</div>
-        <div>
-          <Button appearance="primary" intent="primary" onClick={openDialog}>
-            เพิ่มหน่วยงานย่อย
-          </Button>{" "}
-        </div>
+    <div className="container-fluid">
+      <div>
+        <Breadcrumbs aria-label="breadcrumb">
+          <NavLink underline="hover" color="inherit" to="/dashboard">
+            Home
+          </NavLink>
+          <Typography color="text.primary">Manage Agency</Typography>
+        </Breadcrumbs>
       </div>
-      <div className="bg-white p-3 card ">
-        <div className="mt-2 p-2">
-          <MDBDataTable data={dataSubAgen} />
+      <div className="bg-white p-2 rounded mt-2">
+        <div className=" py-2 d-flex flex-row align-items-center justify-content-between ">
+          <div>ตารางแสดงหน่วยงานทั้งหมด</div>
+          <div>
+            <Button appearance="primary" intent="primary" onClick={openDialog}>
+              เพิ่มหน่วยงานย่อย
+            </Button>{" "}
+          </div>
         </div>
+        <div className="p-3">
+          <div className="mt-2 p-2">
+            <MDBDataTable data={dataSubAgen} />
+          </div>
+        </div>
+        <Dialog
+          className="dialog"
+          shouldCloseOnOverlayClick={false}
+          isShown={isShown}
+          onCloseComplete={() => setIsShown(false)}
+          hasFooter={false}
+        >
+          <div>
+            <TextInputField
+              readOnly
+              value={main_aname}
+              label="หน่วยงานหลักที่ประจำ"
+            />
+            <TextInputField
+              value={subName}
+              onChange={(e) => setSubName(e.target.value)}
+              placeholder="กรอกชื่อหน่วยงาน"
+              label="ชื่อหน่วยงาน"
+            />
+          </div>
+          <div>
+            <Button
+              onClick={onSubmit}
+              width="100%"
+              appearance="primary"
+              intent="success"
+            >
+              บันทึก
+            </Button>
+          </div>
+        </Dialog>
       </div>
-      <Dialog
-        className="dialog"
-        shouldCloseOnOverlayClick={false}
-        isShown={isShown}
-        onCloseComplete={() => setIsShown(false)}
-        hasFooter={false}
-      >
-        <div>
-          <TextInputField
-            readOnly
-            value={main_aname}
-            label="หน่วยงานหลักที่ประจำ"
-          />
-          <TextInputField
-            value={subName}
-            onChange={(e) => setSubName(e.target.value)}
-            placeholder="กรอกชื่อหน่วยงาน"
-            label="ชื่อหน่วยงาน"
-          />
-        </div>
-        <div>
-          <Button
-            onClick={onSubmit}
-            width="100%"
-            appearance="primary"
-            intent="success"
-          >
-            บันทึก
-          </Button>
-        </div>
-      </Dialog>
     </div>
   );
 }

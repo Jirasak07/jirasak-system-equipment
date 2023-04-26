@@ -3,7 +3,9 @@ import { Button, Dialog, SelectField, TextInputField } from "evergreen-ui";
 import axios from "axios";
 import { MDBDataTable } from "mdbreact";
 import Swal from "sweetalert2";
-
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import { NavLink } from "react-router-dom";
 function ManageAc() {
   const [isShownAdd, setIsShownAdd] = useState(false);
   const [isShownAddUser, setIsShownAddUser] = useState(false);
@@ -22,6 +24,7 @@ function ManageAc() {
   const [main_aid, setMain_aid] = useState(1);
   const [color, setColor] = useState("");
   const [maxuid, setMaxid] = useState();
+
   const changeUstatus = () => {
     axios
       .post("http://localhost:4444/change-status", {
@@ -141,7 +144,15 @@ function ManageAc() {
               name: `${item.name}`,
               username: `${item.username}`,
               main: `${item.main_aname}`,
-              status: <div className={item.ustatus_id==1? "text-success":"text-danger"} >{item.ustatus_name}</div>,
+              status: (
+                <div
+                  className={
+                    item.ustatus_id == 1 ? "text-success" : "text-danger"
+                  }
+                >
+                  {item.ustatus_name}
+                </div>
+              ),
               manage: (
                 <Button
                   className="bg-warning border"
@@ -159,21 +170,30 @@ function ManageAc() {
     return () => {};
   }, []);
   return (
-    <div className="container">
-    
-      <div className="d-flex flex-row justify-content-between mt-3">
-      <div>ตารางแสดงผู้ใช้งานในระบบ</div>
-        <Button
-          intent="primary"
-          appearance="primary"
-          onClick={() => setIsShownAddUser(!isShownAddUser)}
-        >
-          เพิ่มผู้ใช้งาน
-        </Button>
+    <div className="container-fluid ">
+      <div>
+        <Breadcrumbs aria-label="breadcrumb">
+          <NavLink underline="hover" color="inherit" to="/dashboard">
+            Home
+          </NavLink>
+          <Typography color="text.primary">Manage User</Typography>
+        </Breadcrumbs>
       </div>
+      <div className="bg-white p-3 rounded mt-2">
+        <div className="d-flex flex-row justify-content-between">
+          <div>ตารางแสดงผู้ใช้งานในระบบ</div>
+          <Button
+            intent="primary"
+            appearance="primary"
+            onClick={() => setIsShownAddUser(!isShownAddUser)}
+          >
+            เพิ่มผู้ใช้งาน
+          </Button>
+        </div>
 
-      <div className="bg-white card p-3 mt-2">
-        <MDBDataTable data={users} responsive />
+        <div className="p-3 mt-2  ">
+          <MDBDataTable data={users} responsive />
+        </div>
       </div>
       <Dialog
         className="dialog "
