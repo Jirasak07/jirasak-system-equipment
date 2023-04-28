@@ -1,7 +1,6 @@
 import { Button } from "evergreen-ui";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import PdfDocument from "./PdfDocument ";
 import { Pane, Dialog } from "evergreen-ui";
 import "./Report.css";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -97,7 +96,6 @@ function Report() {
         </div>
       </div>
     </div>
-     
       <Pane>
         <Dialog
           isShown={isAll}

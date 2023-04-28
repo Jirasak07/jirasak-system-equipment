@@ -55,11 +55,11 @@ function LoginPage() {
     </div>
   ) : (
     <div
-      className="container d-flex align-items-center justify-content-center"
+      className="container-fluid bg-login d-flex align-items-center justify-content-center"
       style={{ width: "100vw", height: "100vh" }}
     >
       <div
-        className="card w-100 p-4"
+        className="loginn w-100 p-4"
         style={{ minWidth: "375px", maxWidth: "550px", minHeight: "500px" }}
       >
         <div className="d-flex dlex-row justify-content-center">
