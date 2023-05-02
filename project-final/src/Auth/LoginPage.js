@@ -13,41 +13,55 @@ function LoginPage() {
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
-    axios
-      .post("http://localhost:4444/login", {
+    if (username == "admin") {
+      axios.post("/check-admin",{
         username: username,
-        password: pass,
-      })
-      .then((res) => {
-        console.table(res.data);
-        if (res.data.status === "ok") {
-          Swal.fire({
-            icon: "success",
-            title: "ยินดีต้อนรับเข้าสู่ระบบ",
-            timer: 900,
-            showConfirmButton: false,
-            timerProgressBar: true,
-          }).then((val) => {
-            localStorage.setItem("user_id", res.data.user_id);
-            localStorage.setItem("main_aid", res.data.main_aid);
-            localStorage.setItem("token", res.data.token);
-            setLoading(true);
-            setTimeout(() => {
-              setLoading(false);
-              navigate("/dashboard");
-            }, 2000);
-          });
-        } else if (res.data.status == "error") {
-          Swal.fire({
-            icon: "error",
-            title: "ไม่สามารถเข้าสู่ระบบได้",
-            timer: 900,
-            showConfirmButton: false,
-            timerProgressBar: true,
-          });
+        password: pass
+      }).then((res)=>{
+        if(res.date.status == "yes"){
+          // localStorage.setItem("user_id", res.data.user_id);
+          // localStorage.setItem("main_aid", res.data.main_aid);
+          // localStorage.setItem("token", res.data.token);
         }
-        // alert(JSON.stringify(res.data))
-      });
+      })
+    } else {
+      axios
+        .post("http://localhost:4444/login", {
+          username: username,
+          password: pass,
+        })
+        .then((res) => {
+          console.table(res.data);
+          if (res.data.status === "ok") {
+            Swal.fire({
+              icon: "success",
+              title: "ยินดีต้อนรับเข้าสู่ระบบ",
+              timer: 900,
+              showConfirmButton: false,
+              timerProgressBar: true,
+            }).then((val) => {
+              localStorage.setItem("user_id", res.data.user_id);
+              localStorage.setItem("main_aid", res.data.main_aid);
+              localStorage.setItem("token", res.data.token);
+              setLoading(true);
+              setTimeout(() => {
+                setLoading(false);
+                navigate("/dashboard");
+              }, 2000);
+            });
+          } else if (res.data.status == "error") {
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถเข้าสู่ระบบได้",
+              timer: 900,
+              showConfirmButton: false,
+              timerProgressBar: true,
+            });
+          }
+          // alert(JSON.stringify(res.data))
+        });
+    }
+
   };
   return loading ? (
     <div className=" d-flex ld ">

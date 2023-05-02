@@ -18,14 +18,16 @@ import ReportAll from "./Component/Report/ReportAll";
 import ReportAgen from "./Component/Report/ReportAgen";
 import ReportStatus from "./Component/Report/ReportStatus";
 import ReportFisicalyear from "./Component/Report/ReportFisicalyear";
+import AddType from './Admin/AddType';
+import AddStatus from './Admin/AddStatus';
 
 function App() {
- useEffect(() => {
-  console.log("wellcom !!")
-  return () => {
- console.log("Good Bye :)")   
-  };
- }, [])
+  useEffect(() => {
+    console.log("wellcom !!")
+    return () => {
+      console.log("Good Bye :)")
+    };
+  }, [])
   return (
     <div className="App">
       <Routes>
@@ -38,10 +40,12 @@ function App() {
           <Route path="/product/edit/:id" element={<EditPD />} />
           <Route path="/manage-ac" element={<ManageAc />} />
           <Route path="/scan/scanc" element={<QRCodeScan />} />
-          <Route path="/manage-ag" element={<ManageAgen/>} />
-          <Route path="/report" element={<Report/>} />
+          <Route path="/manage-ag" element={<ManageAgen />} />
+          <Route path="/report" element={<Report />} />
         </Route>
-        <Route path="/login" element={<LoginPage />}  />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin/add-type" element={<AddType />} />
+        <Route path="/admin/add-status" element={<AddStatus />} />
       </Routes>
     </div>
   );
