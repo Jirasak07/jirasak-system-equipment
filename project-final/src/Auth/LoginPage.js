@@ -6,6 +6,7 @@ import imgLogo from "../assets/LOGO RGB PNG-สำหรับงานนำเ
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "./login.css";
+import { URL } from "../config";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -13,20 +14,8 @@ function LoginPage() {
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
-    if (username == "admin") {
-      axios.post("/check-admin",{
-        username: username,
-        password: pass
-      }).then((res)=>{
-        if(res.date.status == "yes"){
-          // localStorage.setItem("user_id", res.data.user_id);
-          // localStorage.setItem("main_aid", res.data.main_aid);
-          // localStorage.setItem("token", res.data.token);
-        }
-      })
-    } else {
       axios
-        .post("http://localhost:4444/login", {
+        .post(URL+"/login", {
           username: username,
           password: pass,
         })
@@ -60,7 +49,6 @@ function LoginPage() {
           }
           // alert(JSON.stringify(res.data))
         });
-    }
 
   };
   return loading ? (

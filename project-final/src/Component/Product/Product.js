@@ -13,6 +13,7 @@ import DetailProduct from "./DetailProduct";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
+import { URL } from "../../config";
 import { NavLink } from "react-router-dom";
 function Product() {
   const swal = withReactContent(Swal);
@@ -35,7 +36,7 @@ function Product() {
   useEffect(() => {
     const main_aid = localStorage.getItem("main_aid");
     axios
-      .post("http://localhost:4444/product", {
+      .post(URL+"/product", {
         main_aid: main_aid,
       })
       .then((res) => {

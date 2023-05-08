@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { URL } from "../../config";
 function AddPD({ closeAdd }) {
   const [valueType, setValueType] = useState([]);
   const [ptype, setPtype] = useState(1);
@@ -22,17 +23,17 @@ function AddPD({ closeAdd }) {
   } = useForm({ mode: "onBlur" });
   const main_aid = localStorage.getItem("main_aid");
   useEffect(() => {
-    axios.get("http://localhost:4444/product-type").then((res) => {
+    axios.get(URL+"product-type").then((res) => {
       setValueType(res.data);
     });
     axios
-      .post("http://localhost:4444/subagen", {
+      .post(URL+"/subagen", {
         main_aid: main_aid,
       })
       .then((res) => {
         setValueAgen(res.data);
       });
-    axios.get("http://localhost:4444/pstatus").then((res) => {
+    axios.get(URL+"/pstatus").then((res) => {
       setValuePstatus(res.data);
     });
   }, []);
@@ -90,7 +91,7 @@ function AddPD({ closeAdd }) {
     var pick = pickmonth+ "/" + pickdate + "/" + pickyear;
     const pickk = format(new Date(pick), "yyyy-MM-dd");
     axios
-      .post("http://localhost:4444/add-product", {
+      .post(URL+"/add-product", {
         pid: event.pid,
         pname: event.pname,
         pdetail: event.pdetail,
@@ -107,7 +108,7 @@ function AddPD({ closeAdd }) {
       })
       .then((res) => {
         if (res.data.status === "success") {
-          const url = "http://localhost:4444/upload";
+          const url = URL+"/upload";
           const formData = new FormData();
           formData.append("photo", file, event.pid + "main" + typename);
           axios.post(url, formData).then((response) => {
@@ -115,7 +116,7 @@ function AddPD({ closeAdd }) {
             }
           });
           axios
-            .post("http://localhost:4444/save-check", {
+            .post(URL+"/save-check", {
               pid: event.pid,
               sub_aid: subagen,
               user_id: user_id,
@@ -125,7 +126,7 @@ function AddPD({ closeAdd }) {
             })
             .then((res) => {});
           axios
-            .post("http://localhost:4444/save-update", {
+            .post(URL+"/save-update", {
               pid: event.pid,
               sub_aid: subagen,
               userid: user_id,
