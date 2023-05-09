@@ -32,6 +32,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard/>} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/product" element={<Product />} />
           <Route path="/product/check/:id" element={<CheckPD />} />

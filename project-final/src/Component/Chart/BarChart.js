@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { URL } from "../../config";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 ChartJS.register(
@@ -19,6 +20,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
 
 function BarChart() {
   const [fisiyear, setFisiYear] = useState(0);
@@ -41,14 +43,14 @@ function BarChart() {
   useEffect(() => {
     console.log("use BarChart");
     axios
-      .post("http://localhost:4444/barchart", {
+      .post(URL+"/barchart", {
         main_aid: main_aid,
       })
       .then((res) => {
         setDataArray(res.data);
       });
     axios
-      .post("http://localhost:4444/countsub", {
+      .post(URL+"/countsub", {
         main_aid: main_aid,
       })
       .then((res) => {

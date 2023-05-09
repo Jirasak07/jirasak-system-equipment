@@ -5,6 +5,7 @@ import { Pie } from "react-chartjs-2";
 import { format, addYears } from "date-fns";
 import { th } from "date-fns/locale";
 import axios from "axios";
+import {URL} from '../../config'
 ChartJS.register(ArcElement, Tooltip, Legend);
 function PieChart() {
   const [fisiyear, setFisiYear] = useState(0);
@@ -58,27 +59,27 @@ function PieChart() {
     } else {
       setFisiYear(currentYear + 543);
     }
-    axios.post("http://localhost:4444/piechart-normal",{
+    axios.post(URL+"/piechart-normal",{
       check_year:fisiyear
     }).then((res)=>{
       setNm(res.data)
     })
-    axios.post("http://localhost:4444/piechart-broken",{
+    axios.post(URL+"/piechart-broken",{
       check_year:fisiyear
     }).then((res)=>{
       setBrk(res.data)
     })
-    axios.post("http://localhost:4444/piechart-donate",{
+    axios.post(URL+"/piechart-donate",{
       check_year:fisiyear
     }).then((res)=>{
       setDn(res.data)
     })
-    axios.post("http://localhost:4444/piechart-deteriorate",{
+    axios.post(URL+"/piechart-deteriorate",{
       check_year:fisiyear
     }).then((res)=>{
       setQl(res.data)
     })
-    axios.post("http://localhost:4444/piechart-soldout",{
+    axios.post(URL+"/piechart-soldout",{
       check_year:fisiyear
     }).then((res)=>{
       setSold(res.data)

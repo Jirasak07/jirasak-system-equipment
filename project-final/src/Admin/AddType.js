@@ -1,15 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { Button, TextInputField } from 'evergreen-ui';
-import { axios } from 'axios';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { URL } from '../config';
 
 function AddType() {
     const [typeName, setTypeName] = useState()
     const submit = () => {
-        // axios.post("",{
-
-        // }).then((res)=>{
-
-        // })
+        axios.post(URL+"/add-ptype",{
+            ptype_name:typeName
+           }).then((res)=>{
+            if(res.data.status === "ok"){
+              Swal.fire({
+                icon:"success",
+                timer:1000,
+                timerProgressBar:true,
+                showConfirmButton:false
+              })
+            }else if(res.data.status === "error"){
+              Swal.fire({
+                icon:"error",
+                timer:1000,
+                timerProgressBar:true,
+                showConfirmButton:false
+              })
+            }
+           })
     }
     return (
         <div className='container pt-3 d-flex justify-content-center ' >

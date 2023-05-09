@@ -17,6 +17,7 @@ import {
 import { useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { URL } from "../../config";
 
 function Headbar() {
   const [isShow, setIsShow] = useState(false);
@@ -49,7 +50,7 @@ function Headbar() {
   };
   useEffect(() => {
     axios
-      .post("http://localhost:4444/username", {
+      .post(URL+"/username", {
         user_id: user_id,
       })
       .then((res) => {

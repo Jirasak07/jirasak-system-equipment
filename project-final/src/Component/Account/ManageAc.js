@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { NavLink } from "react-router-dom";
+import { URL } from "../../config";
 function ManageAc() {
   const [isShownAdd, setIsShownAdd] = useState(false);
   const [isShownAddUser, setIsShownAddUser] = useState(false);
@@ -27,7 +28,7 @@ function ManageAc() {
 
   const changeUstatus = () => {
     axios
-      .post("http://localhost:4444/change-status", {
+      .post(URL+"/change-status", {
         ustatus: ustatus_id,
         user_id: user_id,
       })
@@ -51,7 +52,7 @@ function ManageAc() {
   };
   const onSubmitUser = () => {
     axios
-      .post("http://localhost:4444/add-user", {
+      .post(URL+"/add-user", {
         maxid: maxuid,
         username: username,
         name: nameAd,
@@ -79,7 +80,7 @@ function ManageAc() {
   };
   const openDialog = (val) => {
     axios
-      .post("http://localhost:4444/user-detail", {
+      .post(URL+"/user-detail", {
         user_id: val,
       })
       .then((res) => {
@@ -90,11 +91,11 @@ function ManageAc() {
         setUser_id(res.data[0].user_id);
       });
   };
-  axios.get("http://localhost:4444/ustatus").then((res) => {
+  axios.get(URL+"/ustatus").then((res) => {
     setUstatus(res.data);
   });
   useEffect(() => {
-    axios.get("http://localhost:4444/maxuserid").then((res) => {
+    axios.get(URL+"/maxuserid").then((res) => {
       const maxid = res.data[0].maxid;
       if (maxid === "null" || maxid === 0) {
         setMaxid(1);
@@ -102,11 +103,11 @@ function ManageAc() {
         setMaxid(maxid + 1);
       }
     });
-    axios.get("http://localhost:4444/main-agen").then((res) => {
+    axios.get(URL+"/main-agen").then((res) => {
       setMainData(res.data);
     });
     axios
-      .post("http://localhost:4444/show-user", {
+      .post(URL+"/show-user", {
         main_aid: main,
       })
       .then((res) => {

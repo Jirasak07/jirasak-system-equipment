@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import { NavLink } from "react-router-dom";
+import {URL} from '../../config'
 function Dashboard() {
   const [canchk, setCanChk] = useState(null);
   const [checked, setChecked] = useState(null);
@@ -39,14 +40,14 @@ function Dashboard() {
       setFisiYear(currentYear + 543);
     }
     axios
-      .post("http://localhost:4444/use", {
+      .post(URL+"/use", {
         main_aid: main,
       })
       .then((res) => {
         setDataUse(res.data);
       });
     axios
-      .post("http://localhost:4444/allitem", {
+      .post(URL+"/allitem", {
         main_aid: main,
       })
       .then((res) => {
@@ -58,7 +59,7 @@ function Dashboard() {
   }, []);
   const fetchChk = () => {
     axios
-      .post("http://localhost:4444/checked", {
+      .post(URL+"/checked", {
         year: fisiyear,
       })
       .then((res) => {

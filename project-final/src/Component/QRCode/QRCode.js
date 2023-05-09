@@ -4,6 +4,7 @@ import { QRCode as QRC } from "react-qrcode-logo";
 import "./QRCode.css";
 import logoQr from "../../assets/LOGO RGB PNG-สำหรับงานนำเสนอแบบดิจิติล.png";
 
+
 function QRCode(props) {
   const printRef = useRef();
   const Dow = async () => {
